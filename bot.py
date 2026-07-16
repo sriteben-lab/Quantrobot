@@ -34,14 +34,19 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
-    if text == "🆕 New User Registration":
-        await update.message.reply_text(
-            "📝 Registration module is handled automatically."
-        )
-
-    elif text == "💼 Wallet":
+    if text == "💼 Wallet":
         await update.message.reply_text(
             "💰 Wallet module is under development."
+        )
+
+    elif text == "📈 Investment Plans":
+        await update.message.reply_text(
+            "📈 Investment module is under development."
+        )
+
+    elif text == "👥 Referrals":
+        await update.message.reply_text(
+            "👥 Referral module is under development."
         )
 
     else:
