@@ -3,11 +3,11 @@ import sqlite3
 DB_NAME = "quantro.db"
 
 
-def get_connection():
+    def get_connection():
     return sqlite3.connect(DB_NAME)
 
 
-def create_tables():
+    def create_tables():
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -30,7 +30,7 @@ def create_tables():
     conn.close()
     
     
-    def user_exists(user_id):
+        def user_exists(user_id):
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -45,7 +45,7 @@ def create_tables():
     return user is not None
 
 
-def add_user(user_id, full_name, email, phone, country):
+        def add_user(user_id, full_name, email, phone, country):
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -70,7 +70,7 @@ def add_user(user_id, full_name, email, phone, country):
     conn.close()
 
 
-def get_user(user_id):
+        def get_user(user_id):
     conn = get_connection()
     cursor = conn.cursor()
 
