@@ -19,21 +19,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=main_menu
     )
 
-
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "ℹ️ Quantro Network Bot\n\n"
         "Use the menu buttons to access the available features."
     )
 
-
 async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
-    if text == "📋 My Profile":
-        await update.message.reply_text(
-            "👤 Your profile feature is coming next."
-        )
+    
 
     elif text == "🆕 New User Registration":
         await update.message.reply_text(
