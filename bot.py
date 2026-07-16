@@ -30,9 +30,12 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     
 
-    elif text == "🆕 New User Registration":
+    async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
+
+    if text == "🆕 New User Registration":
         await update.message.reply_text(
-            "📝 Registration module will be added next."
+            "📝 Registration module is handled automatically."
         )
 
     elif text == "💼 Wallet":
@@ -54,11 +57,13 @@ def main():
     from handlers.profile import profile_handler
     
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(registration_handler)
+app.add_handler(CommandHandler("help", help_command))
 
-    app.add_handler(
-        MessageHandler(filters.TEXT & ~filters.COMMAND, buttons)
+app.add_handler(registration_handler)
+app.add_handler(profile_handler)
+
+app.add_handler(
+    MessageHandler(filters.TEXT & ~filters.COMMAND, buttons)
     )
 
     print("✅ Quantro Network Bot Started")
