@@ -14,7 +14,7 @@ from handlers.registration import registration_handler
 from handlers.profile import profile_handler
 from handlers.wallet import wallet_handler
 from handlers.fund_wallet import fund_wallet_handler
-
+from handlers.deposit import deposit_handler
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -74,13 +74,14 @@ def main():
     app.add_handler(CommandHandler("help", help_command))
 
     app.add_handler(registration_handler)
-    app.add_handler(profile_handler)
-    app.add_handler(wallet_handler)
-    app.add_handler(fund_wallet_handler)
+app.add_handler(profile_handler)
+app.add_handler(wallet_handler)
+app.add_handler(fund_wallet_handler)
+app.add_handler(deposit_handler)
 
-    app.add_handler(
-        MessageHandler(filters.TEXT & ~filters.COMMAND, buttons)
-    )
+app.add_handler(
+    MessageHandler(filters.TEXT & ~filters.COMMAND, buttons)
+)
 
     print("✅ Quantro Network Bot Started")
 
