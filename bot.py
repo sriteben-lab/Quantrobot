@@ -56,6 +56,8 @@ def main():
 
     app = Application.builder().token(BOT_TOKEN).build()
 
+    from handlers.profile import profile_handler
+    
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(registration_handler)
