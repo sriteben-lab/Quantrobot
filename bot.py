@@ -10,7 +10,7 @@ from telegram.ext import (
 from config import BOT_TOKEN
 from database import create_tables
 from keyboards import main_menu
-
+from handlers.registration import registration_handler
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -58,6 +58,7 @@ def main():
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(registration_handler)
 
     app.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, buttons)
