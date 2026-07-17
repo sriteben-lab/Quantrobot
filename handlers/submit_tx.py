@@ -13,12 +13,13 @@ TXID = 0
 
 async def submit_tx(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "📤 Paste your Transaction Hash (TXID):"
+        "📤 Please paste your Transaction Hash (TXID):"
     )
     return TXID
 
 
 async def save_tx(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     txid = update.message.text
 
     network = context.user_data.get("network", "Unknown")
@@ -31,8 +32,19 @@ async def save_tx(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     await update.message.reply_text(
-        "✅ Transaction submitted successfully.\n\n"
-        "Your payment is now waiting for blockchain confirmation."
+        f"""✅ Deposit Submitted Successfully
+
+Network:
+{network}
+
+Status:
+Pending Verification
+
+Your transaction has been received.
+
+The blockchain will be checked automatically.
+
+Once confirmed, your wallet balance will be credited."""
     )
 
     return ConversationHandler.END
