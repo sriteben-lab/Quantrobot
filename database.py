@@ -123,3 +123,23 @@ def get_pending_deposits():
     conn.close()
 
     return deposits
+
+    
+    def get_user_deposits(user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT network, amount, txid, status
+        FROM deposits
+        WHERE user_id=?
+        ORDER BY id DESC
+    """, (user_id,))
+
+    deposits = cursor.fetchall()
+
+    conn.close()
+    return deposits
+
+
+    
