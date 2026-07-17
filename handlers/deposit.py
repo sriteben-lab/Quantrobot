@@ -1,5 +1,12 @@
 from telegram import Update, ReplyKeyboardMarkup
-from telegram.ext import ContextTypes, MessageHandler, filters
+from telegram.ext import (
+    ContextTypes,
+    ConversationHandler,
+    MessageHandler,
+    filters,
+)
+
+AMOUNT = 0
 
 submit_keyboard = ReplyKeyboardMarkup(
     [
@@ -10,169 +17,93 @@ submit_keyboard = ReplyKeyboardMarkup(
 )
 
 
-async def deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
+# ---------------- BTC ----------------
 
-    text = update.message.text
+async def select_btc(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data["network"] = "BTC"
 
-    if text == "₿ BTC":
-        context.user_data["network"] = "BTC"
+    await update.message.reply_text(
+        "💰 Enter the amount of BTC you want to deposit:"
+    )
 
+    return AMOUNT
+
+
+# ---------------- ETH ----------------
+
+async def select_eth(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data["network"] = "ETH"
+
+    await update.message.reply_text(
+        "💰 Enter the amount of ETH you want to deposit:"
+    )
+
+    return AMOUNT
+
+
+# ---------------- USDT TRC20 ----------------
+
+async def select_usdt_trc20(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data["network"] = "USDT TRC20"
+
+    await update.message.reply_text(
+        "💰 Enter the amount of USDT (TRC20) you want to deposit:"
+    )
+
+    return AMOUNT
+
+
+# ---------------- USDT ERC20 ----------------
+
+async def select_usdt_erc20(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data["network"] = "USDT ERC20"
+
+    await update.message.reply_text(
+        "💰 Enter the amount of USDT (ERC20) you want to deposit:"
+    )
+
+    return AMOUNT
+
+
+# ---------------- USDC ERC20 ----------------
+
+async def select_usdc_erc20(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data["network"] = "USDC ERC20"
+
+    await update.message.reply_text(
+        "💰 Enter the amount of USDC (ERC20) you want to deposit:"
+    )
+
+    return AMOUNT
+
+
+# ---------------- Receive Amount ----------------
+
+async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    amount = update.message.text
+
+    try:
+        amount = float(amount)
+    except ValueError:
         await update.message.reply_text(
-            """₿ *BTC Deposit*
-
-Address:
-`YOUR_BTC_ADDRESS`
-
-Network:
-Bitcoin
-
-Minimum Deposit:
-0.0001 BTC
-
-━━━━━━━━━━━━━━
-
-After sending payment:
-
-1️⃣ Copy your Transaction Hash (TXID)
-
-2️⃣ Click **📤 Submit Transaction Hash**
-
-3️⃣ Paste your TXID
-
-⚠️ Send only BTC to this address.
-""",
-            parse_mode="Markdown",
-            reply_markup=submit_keyboard,
+            "❌ Please enter a valid amount."
         )
+        return AMOUNT
 
-    elif text == "♦ ETH":
-        context.user_data["network"] = "ETH"
+    context.user_data["amount"] = amount
 
-        await update.message.reply_text(
-            """♦ *ETH Deposit*
+    network = context.user_data["network"]
 
-Address:
-`YOUR_ETH_ADDRESS`
+    addresses = {
+        "BTC": "YOUR_BTC_ADDRESS",
+        "ETH": "YOUR_ETH_ADDRESS",
+        "USDT TRC20": "YOUR_USDT_TRC20_ADDRESS",
+        "USDT ERC20": "YOUR_USDT_ERC20_ADDRESS",
+        "USDC ERC20": "YOUR_USDC_ERC20_ADDRESS",
+    }
 
-Network:
-Ethereum
-
-Minimum Deposit:
-0.005 ETH
-
-━━━━━━━━━━━━━━
-
-After sending payment:
-
-1️⃣ Copy your Transaction Hash (TXID)
-
-2️⃣ Click **📤 Submit Transaction Hash**
-
-3️⃣ Paste your TXID
-
-⚠️ Send only ETH to this address.
-""",
-            parse_mode="Markdown",
-            reply_markup=submit_keyboard,
-        )
-
-    elif text == "💲 USDT (TRC20)":
-        context.user_data["network"] = "USDT TRC20"
-
-        await update.message.reply_text(
-            """💲 *USDT (TRC20)*
-
-Address:
-`YOUR_USDT_TRC20_ADDRESS`
-
-Network:
-TRON (TRC20)
-
-Minimum Deposit:
-10 USDT
-
-━━━━━━━━━━━━━━
-
-After sending payment:
-
-1️⃣ Copy your Transaction Hash (TXID)
-
-2️⃣ Click **📤 Submit Transaction Hash**
-
-3️⃣ Paste your TXID
-
-⚠️ Send only USDT through the TRC20 network.
-""",
-            parse_mode="Markdown",
-            reply_markup=submit_keyboard,
-        )
-
-    elif text == "💲 USDT (ERC20)":
-        context.user_data["network"] = "USDT ERC20"
-
-        await update.message.reply_text(
-            """💲 *USDT (ERC20)*
-
-Address:
-`YOUR_USDT_ERC20_ADDRESS`
-
-Network:
-Ethereum (ERC20)
-
-Minimum Deposit:
-10 USDT
-
-━━━━━━━━━━━━━━
-
-After sending payment:
-
-1️⃣ Copy your Transaction Hash (TXID)
-
-2️⃣ Click **📤 Submit Transaction Hash**
-
-3️⃣ Paste your TXID
-
-⚠️ Send only USDT through the ERC20 network.
-""",
-            parse_mode="Markdown",
-            reply_markup=submit_keyboard,
-        )
-
-    elif text == "💲 USDC (ERC20)":
-        context.user_data["network"] = "USDC ERC20"
-
-        await update.message.reply_text(
-            """💲 *USDC (ERC20)*
-
-Address:
-`YOUR_USDC_ERC20_ADDRESS`
-
-Network:
-Ethereum (ERC20)
-
-Minimum Deposit:
-10 USDC
-
-━━━━━━━━━━━━━━
-
-After sending payment:
-
-1️⃣ Copy your Transaction Hash (TXID)
-
-2️⃣ Click **📤 Submit Transaction Hash**
-
-3️⃣ Paste your TXID
-
-⚠️ Send only USDC through the ERC20 network.
-""",
-            parse_mode="Markdown",
-            reply_markup=submit_keyboard,
-        )
-
-
-deposit_handler = MessageHandler(
-    filters.Regex(
-        "^(₿ BTC|♦ ETH|💲 USDT \\(TRC20\\)|💲 USDT \\(ERC20\\)|💲 USDC \\(ERC20\\))$"
-    ),
-    deposit,
-)
+    minimums = {
+        "BTC": "0.0001 BTC",
+        "ETH": "0.005 ETH",
+        "USDT TR
