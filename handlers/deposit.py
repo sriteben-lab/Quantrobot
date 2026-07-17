@@ -133,7 +133,11 @@ async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "USDC ERC20": "USDC",
     }
 
-    qr_file = generate_qr(addresses[network])
+    qr_file = generate_qr(
+       network,
+       addresses[network],
+       crypto_amount
+    )
 
 with open(qr_file, "rb") as photo:
     await update.message.reply_photo(
