@@ -8,6 +8,7 @@ def get_connection():
 
 
 def create_tables():
+def create_tables():
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -23,6 +24,18 @@ def create_tables():
         wallet_balance REAL DEFAULT 0.0,
         affiliate_balance REAL DEFAULT 0.0,
         referrals INTEGER DEFAULT 0
+    )
+    """)
+
+    # Deposit table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS deposits (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        network TEXT,
+        amount REAL,
+        txid TEXT,
+        status TEXT DEFAULT 'Pending'
     )
     """)
 
@@ -84,3 +97,31 @@ def get_user(user_id):
     conn.close()
 
     return user
+
+
+def add_deposit(user_id, network, amount, txid):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO deposits(user_id, network, amount, txid)
+        VALUES(?,?,?,?)
+    """, (user_id, network, amount, txid))
+
+    conn.commit()
+    conn.close()
+
+
+def get_pending_deposits():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM deposits WHERE status='Pending'"
+    )
+
+    deposits = cursor.fetchall()
+
+    conn.close()
+
+    return deposits
