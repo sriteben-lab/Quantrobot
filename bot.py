@@ -10,6 +10,7 @@ from telegram.ext import (
 from config import BOT_TOKEN
 from database import create_tables
 from keyboards import main_menu
+
 from handlers.registration import registration_handler
 from handlers.profile import profile_handler
 from handlers.wallet import wallet_handler
@@ -20,11 +21,12 @@ from handlers.navigation import navigation_handler
 from handlers.back import back_handler
 from handlers.history import history_handler
 
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🎉 Welcome to Quantro Network!\n\n"
         "Please choose an option from the menu below.",
-        reply_markup=main_menu
+        reply_markup=main_menu,
     )
 
 
@@ -48,17 +50,27 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "👥 Referral module is under development."
         )
 
-    elif text == "🪪 KYC":
+    elif text == "🪪 KYC Status":
         await update.message.reply_text(
-            "🪪 KYC module is under development."
+            "🪪 KYC Status module is under development."
         )
 
-    elif text == "💰 Refund":
+    elif text == "📤 Submit KYC":
         await update.message.reply_text(
-            "💰 Refund module is under development."
+            "📤 KYC submission module is under development."
         )
 
-    elif text == "💬 Support":
+    elif text == "💰 Submit Refund Request":
+        await update.message.reply_text(
+            "💰 Refund request module is under development."
+        )
+
+    elif text == "📊 Check Status":
+        await update.message.reply_text(
+            "📊 Status checker is under development."
+        )
+
+    elif text == "💬 Chat with Support":
         await update.message.reply_text(
             "💬 Support module is under development."
         )
@@ -97,4 +109,5 @@ def main():
 
 
 if __name__ == "__main__":
+    main()
     main()
