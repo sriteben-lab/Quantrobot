@@ -125,7 +125,7 @@ def get_pending_deposits():
     return deposits
 
     
-    def get_user_deposits(user_id):
+def get_user_deposits(user_id):
     conn = get_connection()
     cursor = conn.cursor()
 
