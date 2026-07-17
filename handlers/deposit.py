@@ -118,7 +118,7 @@ async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     addresses = {
         "BTC": "bc1qhnxdrmy2jpdmnguk8gk2f4dhdsmr9kct2c84c8",
-        "ETH": "YOUR_ETH_ADDRESS",
+        "ETH": "0xFe39F71E10Ab423C68397b902100D3a813AC2CE3",
         "USDT TRC20": "TEr5rD8xZT4P6DebZcRe5JDcpoCXPF5QLH",
         "USDT ERC20": "0xFe39F71E10Ab423C68397b902100D3a813AC2CE3",
         "USDC ERC20": "0xFe39F71E10Ab423C68397b902100D3a813AC2CE3",
@@ -153,7 +153,7 @@ ${price:,.2f}
 
 `{addresses[network]}`
 
-━━━━━━━━━━━━━━
+©️click on the address to copy it✓
 
 After completing the transfer:
 
