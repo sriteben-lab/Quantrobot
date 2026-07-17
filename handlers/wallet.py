@@ -1,16 +1,9 @@
-from telegram import Update, ReplyKeyboardMarkup
+from telegram import Update
 from telegram.ext import ContextTypes, MessageHandler, filters
 
+from keyboards import wallet_menu
 from database import get_user
 
-wallet_keyboard = ReplyKeyboardMarkup(
-    [
-        ["💳 Fund Wallet"],
-        ["📜 Transaction History"],
-        ["🔙 Back"],
-    ],
-    resize_keyboard=True,
-)
 
 async def wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = get_user(update.effective_user.id)
@@ -37,9 +30,10 @@ Choose an option below.
 
     await update.message.reply_text(
         message,
-        reply_markup=wallet_keyboard,
+        reply_markup=wallet_menu,
         parse_mode="Markdown"
     )
+
 
 wallet_handler = MessageHandler(
     filters.Regex("^💼 Wallet$"),
