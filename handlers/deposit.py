@@ -4,7 +4,6 @@ from telegram.ext import ContextTypes, MessageHandler, filters
 submit_keyboard = ReplyKeyboardMarkup(
     [
         ["📤 Submit Transaction Hash"],
-        ["⬅ Back to Wallet"],
         ["🏠 Main Menu"],
     ],
     resize_keyboard=True,
@@ -176,4 +175,4 @@ deposit_handler = MessageHandler(
         "^(₿ BTC|♦ ETH|💲 USDT \\(TRC20\\)|💲 USDT \\(ERC20\\)|💲 USDC \\(ERC20\\))$"
     ),
     deposit,
-        )
+)
