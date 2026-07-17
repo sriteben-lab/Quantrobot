@@ -140,7 +140,7 @@ async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 with open(qr_file, "rb") as photo:
-    await update.message.reply_photo(
+     await update.message.reply_photo(
         photo=photo,
         caption=f"""
 💳 *Deposit Details*
