@@ -4,8 +4,8 @@ from telegram.ext import ContextTypes, MessageHandler, filters
 submit_keyboard = ReplyKeyboardMarkup(
     [
         ["📤 Submit Transaction Hash"],
-        ["💳 Fund Wallet"],
-        ["🔙 Back"],
+        ["⬅ Back to Wallet"],
+        ["🏠 Main Menu"],
     ],
     resize_keyboard=True,
 )
