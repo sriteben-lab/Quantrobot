@@ -91,11 +91,9 @@ async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
             raise ValueError
 
     except ValueError:
-
         await update.message.reply_text(
             "❌ Please enter a valid USD amount."
         )
-
         return AMOUNT
 
     network = context.user_data["network"]
@@ -105,11 +103,9 @@ async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     price = prices.get(network)
 
     if price is None:
-
         await update.message.reply_text(
             "❌ Unable to retrieve live prices.\nPlease try again later."
         )
-
         return ConversationHandler.END
 
     crypto_amount = usd_amount / price
@@ -134,15 +130,15 @@ async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     }
 
     qr_file = generate_qr(
-       network,
-       addresses[network],
-       crypto_amount
+        network,
+        addresses[network],
+        crypto_amount
     )
 
-with open(qr_file, "rb") as photo:
-     await update.message.reply_photo(
-        photo=photo,
-        caption=f"""
+    with open(qr_file, "rb") as photo:
+        await update.message.reply_photo(
+            photo=photo,
+            caption=f"""
 💳 *Deposit Details*
 
 💵 Deposit Value:
@@ -180,15 +176,13 @@ After completing the transfer:
 
 ⚠️ Send only **{symbols[network]}** through the selected network.
 
-⚠️ Send only **{symbols[network]}** through the selected network.
-
 ⚠️ Sending funds through the wrong network may result in permanent loss of funds.
 """,
-        parse_mode="Markdown",
-        reply_markup=submit_keyboard,
-    )
+            parse_mode="Markdown",
+            reply_markup=submit_keyboard,
+        )
 
-return ConversationHandler.END
+    return ConversationHandler.END
 
 
 deposit_handler = ConversationHandler(
