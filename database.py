@@ -97,14 +97,26 @@ def get_user(user_id):
     return user
 
 
-def add_deposit(user_id, network, amount, txid):
+def add_deposit(user_id, network, usd_amount, crypto_amount, txid):
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT INTO deposits(user_id, network, amount, txid)
-    VALUES(?,?,?,?)
-    """, (user_id, network, amount, txid))
+    INSERT INTO deposits(
+        user_id,
+        network,
+        usd_amount,
+        crypto_amount,
+        txid
+    )
+    VALUES(?,?,?,?,?)
+    """, (
+        user_id,
+        network,
+        usd_amount,
+        crypto_amount,
+        txid
+    ))
 
     conn.commit()
     conn.close()
