@@ -35,10 +35,20 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+from keyboards import main_menu
+
 async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
+    if text == "🏠 Main Menu":
+        await update.message.reply_text(
+            "🏠 Main Menu",
+            reply_markup=main_menu
+        )
+        return
+
     if text == "📈 Investment Plans":
+        ...
         await update.message.reply_text(
             "📈 Investment module is under development."
         )
