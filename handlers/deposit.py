@@ -6,6 +6,8 @@ from telegram.ext import (
     filters,
 )
 
+from utils.prices import get_prices
+
 AMOUNT = 0
 
 submit_keyboard = ReplyKeyboardMarkup(
@@ -23,7 +25,7 @@ async def select_btc(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["network"] = "BTC"
 
     await update.message.reply_text(
-        "💰 Enter the amount of BTC you want to deposit:"
+        "💵 Enter the amount you want to deposit in USD.\n\nExample:\n250"
     )
 
     return AMOUNT
@@ -35,7 +37,7 @@ async def select_eth(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["network"] = "ETH"
 
     await update.message.reply_text(
-        "💰 Enter the amount of ETH you want to deposit:"
+        "💵 Enter the amount you want to deposit in USD.\n\nExample:\n250"
     )
 
     return AMOUNT
@@ -47,7 +49,7 @@ async def select_usdt_trc20(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["network"] = "USDT TRC20"
 
     await update.message.reply_text(
-        "💰 Enter the amount of USDT (TRC20) you want to deposit:"
+        "💵 Enter the amount you want to deposit in USD.\n\nExample:\n250"
     )
 
     return AMOUNT
@@ -59,7 +61,7 @@ async def select_usdt_erc20(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["network"] = "USDT ERC20"
 
     await update.message.reply_text(
-        "💰 Enter the amount of USDT (ERC20) you want to deposit:"
+        "💵 Enter the amount you want to deposit in USD.\n\nExample:\n250"
     )
 
     return AMOUNT
@@ -71,65 +73,89 @@ async def select_usdc_erc20(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["network"] = "USDC ERC20"
 
     await update.message.reply_text(
-        "💰 Enter the amount of USDC (ERC20) you want to deposit:"
+        "💵 Enter the amount you want to deposit in USD.\n\nExample:\n250"
     )
 
     return AMOUNT
 
 
-# ---------------- Receive Amount ----------------
+# ---------------- RECEIVE USD AMOUNT ----------------
 
 async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    amount = update.message.text
-
     try:
-        amount = float(amount)
-    except ValueError:
-        await update.message.reply_text(
-            "❌ Please enter a valid amount."
-        )
-        return AMOUNT
+        usd_amount = float(update.message.text)
 
-    context.user_data["amount"] = amount
+        if usd_amount <= 0:
+            raise ValueError
+
+    except ValueError:
+
+        await update.message.reply_text(
+            "❌ Please enter a valid USD amount."
+        )
+
+        return AMOUNT
 
     network = context.user_data["network"]
 
+    prices = get_prices()
+
+    price = prices.get(network)
+
+    if price is None:
+
+        await update.message.reply_text(
+            "❌ Unable to retrieve live prices.\nPlease try again later."
+        )
+
+        return ConversationHandler.END
+
+    crypto_amount = usd_amount / price
+
+    context.user_data["usd_amount"] = usd_amount
+    context.user_data["crypto_amount"] = crypto_amount
+
     addresses = {
-        "BTC": "YOUR_BTC_ADDRESS",
+        "BTC": "bc1qhnxdrmy2jpdmnguk8gk2f4dhdsmr9kct2c84c8",
         "ETH": "YOUR_ETH_ADDRESS",
-        "USDT TRC20": "YOUR_USDT_TRC20_ADDRESS",
-        "USDT ERC20": "YOUR_USDT_ERC20_ADDRESS",
-        "USDC ERC20": "YOUR_USDC_ERC20_ADDRESS",
+        "USDT TRC20": "TEr5rD8xZT4P6DebZcRe5JDcpoCXPF5QLH",
+        "USDT ERC20": "0xFe39F71E10Ab423C68397b902100D3a813AC2CE3",
+        "USDC ERC20": "0xFe39F71E10Ab423C68397b902100D3a813AC2CE3",
     }
 
-    minimums = {
-        "BTC": "0.0001 BTC",
-        "ETH": "0.005 ETH",
-        "USDT TRC20": "10 USDT",
-        "USDT ERC20": "10 USDT",
-        "USDC ERC20": "10 USDC",
+    symbols = {
+        "BTC": "BTC",
+        "ETH": "ETH",
+        "USDT TRC20": "USDT",
+        "USDT ERC20": "USDT",
+        "USDC ERC20": "USDC",
     }
 
     await update.message.reply_text(
         f"""
 💳 *Deposit Details*
 
+💵 Deposit Value:
+${usd_amount:,.2f}
+
 🌐 Network:
 {network}
 
-💰 Amount:
-{amount}
+📈 Current Price:
+${price:,.2f}
+
+🪙 Send Exactly:
+
+`{crypto_amount:.8f} {symbols[network]}`
 
 📥 Deposit Address:
-`{addresses[network]}`
 
-Minimum Deposit:
-{minimums[network]}
+`{addresses[network]}`
 
 ━━━━━━━━━━━━━━
 
-After sending payment:
+After completing the transfer:
 
 1️⃣ Copy your Transaction Hash (TXID)
 
@@ -137,7 +163,9 @@ After sending payment:
 
 3️⃣ Paste your TXID
 
-⚠️ Send funds only through the selected network.
+⚠️ Send only **{symbols[network]}** through the selected network.
+
+Failure to use the correct network may result in loss of funds.
 """,
         parse_mode="Markdown",
         reply_markup=submit_keyboard,
@@ -163,4 +191,4 @@ deposit_handler = ConversationHandler(
         ]
     },
     fallbacks=[],
-    )
+)
