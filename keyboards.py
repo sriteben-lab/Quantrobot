@@ -1,5 +1,6 @@
 from telegram import ReplyKeyboardMarkup
 
+# Main Menu
 main_menu = ReplyKeyboardMarkup(
     [
         ["🆕 New User Registration"],
@@ -13,6 +14,17 @@ main_menu = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 
+# Wallet Menu
+wallet_menu = ReplyKeyboardMarkup(
+    [
+        ["💳 Fund Wallet"],
+        ["📜 Transaction History"],
+        ["⬅ Back"]
+    ],
+    resize_keyboard=True
+)
+
+# Cancel Menu
 cancel_menu = ReplyKeyboardMarkup(
     [
         ["🏠 Main Menu"],
