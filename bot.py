@@ -35,11 +35,10 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-from keyboards import main_menu
-
 async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
+    # Return to Main Menu
     if text == "🏠 Main Menu":
         await update.message.reply_text(
             "🏠 Main Menu",
@@ -47,8 +46,23 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
+    # Ignore messages already handled elsewhere
+    ignored = [
+        "💼 Wallet",
+        "💳 Fund Wallet",
+        "📜 Transaction History",
+        "📤 Submit Transaction Hash",
+        "₿ BTC",
+        "♦ ETH",
+        "💲 USDT (TRC20)",
+        "💲 USDT (ERC20)",
+        "💲 USDC (ERC20)",
+    ]
+
+    if text in ignored:
+        return
+
     if text == "📈 Investment Plans":
-        ...
         await update.message.reply_text(
             "📈 Investment module is under development."
         )
@@ -83,6 +97,12 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "💬 Support module is under development."
         )
 
+    elif text == "📋 My Profile":
+        return
+
+    elif text == "🆕 New User Registration":
+        return
+
     else:
         await update.message.reply_text(
             "Please choose an option from the menu."
@@ -105,6 +125,7 @@ def main():
     app.add_handler(submit_tx_handler)
     app.add_handler(history_handler)
 
+    # Generic handler MUST be last
     app.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, buttons)
     )
