@@ -7,6 +7,7 @@ from telegram.ext import (
 )
 
 from utils.prices import get_prices
+from utils.qrcode_generator import generate_qr
 
 AMOUNT = 0
 
@@ -132,8 +133,12 @@ async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "USDC ERC20": "USDC",
     }
 
-    await update.message.reply_text(
-        f"""
+    qr_file = generate_qr(addresses[network])
+
+with open(qr_file, "rb") as photo:
+    await update.message.reply_photo(
+        photo=photo,
+        caption=f"""
 💳 *Deposit Details*
 
 💵 Deposit Value:
@@ -153,25 +158,31 @@ ${price:,.2f}
 
 `{addresses[network]}`
 
-©️click on the address to copy it✓
+📋 Tap and hold the address above to copy it.
+
+━━━━━━━━━━━━━━
 
 After completing the transfer:
 
-1️⃣ Copy your Transaction Hash (TXID)
+1️⃣ Send exactly the amount shown above.
 
-2️⃣ Click **📤 Submit Transaction Hash**
+2️⃣ Copy your Transaction Hash (TXID).
 
-3️⃣ Paste your TXID
+3️⃣ Click **📤 Submit Transaction Hash**.
+
+4️⃣ Paste your TXID.
 
 ⚠️ Send only **{symbols[network]}** through the selected network.
 
-Failure to use the correct network may result in loss of funds.
+⚠️ Send only **{symbols[network]}** through the selected network.
+
+⚠️ Sending funds through the wrong network may result in permanent loss of funds.
 """,
         parse_mode="Markdown",
         reply_markup=submit_keyboard,
     )
 
-    return ConversationHandler.END
+return ConversationHandler.END
 
 
 deposit_handler = ConversationHandler(
