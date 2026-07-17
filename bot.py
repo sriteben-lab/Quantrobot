@@ -18,7 +18,6 @@ from handlers.fund_wallet import fund_wallet_handler
 from handlers.deposit import deposit_handler
 from handlers.submit_tx import submit_tx_handler
 from handlers.navigation import navigation_handler
-from handlers.back import back_handler
 from handlers.history import history_handler
 
 
@@ -96,7 +95,6 @@ def main():
     app.add_handler(deposit_handler)
     app.add_handler(submit_tx_handler)
     app.add_handler(navigation_handler)
-    app.add_handler(back_handler)
     app.add_handler(history_handler)
 
     app.add_handler(
