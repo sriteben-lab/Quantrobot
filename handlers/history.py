@@ -18,10 +18,18 @@ async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     message = "📜 *Transaction History*\n\n"
 
-    for network, amount, txid, status in deposits:
+    for network, usd_amount, crypto_amount, txid, status in deposits:
+
+        crypto_text = (
+            f"{crypto_amount:.8f}"
+            if crypto_amount is not None
+            else "Pending Calculation"
+        )
+
         message += (
             f"🌐 Network: {network}\n"
-            f"💵 Amount: {amount}\n"
+            f"💵 Deposit Value: ${usd_amount:.2f}\n"
+            f"🪙 Crypto Amount: {crypto_text}\n"
             f"🧾 TX Hash:\n"
             f"`{txid}`\n"
             f"📌 Status: {status}\n"
@@ -30,8 +38,8 @@ async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         message,
-        reply_markup=wallet_menu,
-        parse_mode="Markdown"
+        parse_mode="Markdown",
+        reply_markup=wallet_menu
     )
 
 
