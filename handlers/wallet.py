@@ -7,16 +7,16 @@ from database import get_user
 
 async def wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-user = get_user(user_id)
+    user = get_user(user_id)
 
-print("Wallet User ID:", user_id)
-print("Database User:", user)
+    print("Wallet User ID:", user_id)
+    print("Database User:", user)
 
-if user is None:
-    await update.message.reply_text(
-        "❌ Please register first."
-    )
-    return
+    if user is None:
+        await update.message.reply_text(
+            "❌ Please register first."
+        )
+        return
 
     message = f"""
 💼 *QUANTRO WALLET*
