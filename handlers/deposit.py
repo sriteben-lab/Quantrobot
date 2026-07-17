@@ -97,6 +97,8 @@ async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return AMOUNT
 
     network = context.user_data["network"]
+    print("Selected Network:", network)
+    print("Wallet Address:", addresses[network])
 
     prices = get_prices()
 
