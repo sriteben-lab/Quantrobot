@@ -162,17 +162,15 @@ ${price:,.2f}
 
 📋 Tap and hold the address above to copy it.
 
-━━━━━━━━━━━━━━
-
-After completing the transfer:
-
 1️⃣ Send exactly the amount shown above.
 
-2️⃣ Copy your Transaction Hash (TXID).
+2️⃣ After completing the transfer:
 
-3️⃣ Click **📤 Submit Transaction Hash**.
+3️⃣ Copy your Transaction Hash (TXID).
 
-4️⃣ Paste your TXID.
+4️⃣ Click **📤 Submit Transaction Hash**.
+
+5️⃣ Paste your TXID.
 
 ⚠️ Send only **{symbols[network]}** through the selected network.
 
