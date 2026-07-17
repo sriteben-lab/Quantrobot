@@ -11,6 +11,7 @@ def create_tables():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # Users Table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
         user_id INTEGER PRIMARY KEY,
@@ -26,6 +27,7 @@ def create_tables():
     )
     """)
 
+    # Deposits Table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS deposits (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,6 +38,12 @@ def create_tables():
         status TEXT DEFAULT 'Pending'
     )
     """)
+
+    # Add new column if it doesn't already exist
+    try:
+        cursor.execute("ALTER TABLE deposits ADD COLUMN crypto_amount REAL")
+    except sqlite3.OperationalError:
+        pass
 
     conn.commit()
     conn.close()
@@ -51,6 +59,7 @@ def user_exists(user_id):
     )
 
     user = cursor.fetchone()
+
     conn.close()
 
     return user is not None
@@ -105,11 +114,11 @@ def add_deposit(user_id, network, usd_amount, crypto_amount, txid):
     INSERT INTO deposits(
         user_id,
         network,
-        usd_amount,
+        amount,
         crypto_amount,
         txid
     )
-    VALUES(?,?,?,?,?)
+    VALUES (?, ?, ?, ?, ?)
     """, (
         user_id,
         network,
@@ -136,13 +145,13 @@ def get_pending_deposits():
 
     return deposits
 
-    
+
 def get_user_deposits(user_id):
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT network, amount, txid, status
+        SELECT network, amount, crypto_amount, txid, status
         FROM deposits
         WHERE user_id=?
         ORDER BY id DESC
@@ -151,7 +160,5 @@ def get_user_deposits(user_id):
     deposits = cursor.fetchall()
 
     conn.close()
+
     return deposits
-
-
-    
