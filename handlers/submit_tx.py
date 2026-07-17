@@ -8,50 +8,68 @@ from telegram.ext import (
 )
 
 from database import add_deposit
-from handlers.wallet import wallet
+from keyboards import main_menu
 
 TXID = 0
 
 
 async def submit_tx(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "📤 Please paste your Transaction Hash (TXID):\n\n"
-        "Or press ⬅ Back to Wallet."
+        "📤 Please paste your Transaction Hash (TXID).\n\n"
+        "After submitting, your transaction will be verified automatically."
     )
     return TXID
 
 
 async def save_tx(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    txid = update.message.text
+    txid = update.message.text.strip()
 
     network = context.user_data.get("network", "Unknown")
+    amount = context.user_data.get("amount", 0)
 
     add_deposit(
         update.effective_user.id,
         network,
-        0,
+        amount,
         txid
     )
 
     await update.message.reply_text(
-        f"""✅ Deposit Submitted Successfully
+        f"""✅ *Deposit Submitted Successfully*
 
-Network: {network}
+🌐 Network:
+{network}
 
-Status: Pending Verification
+💰 Amount:
+{amount}
+
+📌 Status:
+Pending Verification
+
+━━━━━━━━━━━━━━
 
 Your transaction has been received.
 
 The blockchain will be checked automatically.
 
-Once confirmed, your wallet balance will be credited."""
+Once the required confirmations are reached, your wallet balance will be credited automatically.
+""",
+        parse_mode="Markdown",
+        reply_markup=main_menu,
     )
+
+    # Clear temporary deposit data
+    context.user_data.pop("network", None)
+    context.user_data.pop("amount", None)
 
     return ConversationHandler.END
 
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await wallet(update, context)
+    await update.message.reply_text(
+        "❌ Deposit submission cancelled.",
+        reply_markup=main_menu,
+    )
     return ConversationHandler.END
 
 
@@ -65,17 +83,9 @@ submit_tx_handler = ConversationHandler(
     states={
         TXID: [
             MessageHandler(
-                filters.Regex("^⬅ Back to Wallet$"),
-                cancel
-            ),
-            MessageHandler(
-                filters.Regex("^🏠 Main Menu$"),
-                cancel
-            ),
-            MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                save_tx
-            ),
+                save_tx,
+            )
         ]
     },
     fallbacks=[
