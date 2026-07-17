@@ -106,4 +106,61 @@ async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     minimums = {
         "BTC": "0.0001 BTC",
         "ETH": "0.005 ETH",
-        "USDT TR
+        "USDT TRC20": "10 USDT",
+        "USDT ERC20": "10 USDT",
+        "USDC ERC20": "10 USDC",
+    }
+
+    await update.message.reply_text(
+        f"""
+💳 *Deposit Details*
+
+🌐 Network:
+{network}
+
+💰 Amount:
+{amount}
+
+📥 Deposit Address:
+`{addresses[network]}`
+
+Minimum Deposit:
+{minimums[network]}
+
+━━━━━━━━━━━━━━
+
+After sending payment:
+
+1️⃣ Copy your Transaction Hash (TXID)
+
+2️⃣ Click **📤 Submit Transaction Hash**
+
+3️⃣ Paste your TXID
+
+⚠️ Send funds only through the selected network.
+""",
+        parse_mode="Markdown",
+        reply_markup=submit_keyboard,
+    )
+
+    return ConversationHandler.END
+
+
+deposit_handler = ConversationHandler(
+    entry_points=[
+        MessageHandler(filters.Regex("^₿ BTC$"), select_btc),
+        MessageHandler(filters.Regex("^♦ ETH$"), select_eth),
+        MessageHandler(filters.Regex("^💲 USDT \\(TRC20\\)$"), select_usdt_trc20),
+        MessageHandler(filters.Regex("^💲 USDT \\(ERC20\\)$"), select_usdt_erc20),
+        MessageHandler(filters.Regex("^💲 USDC \\(ERC20\\)$"), select_usdc_erc20),
+    ],
+    states={
+        AMOUNT: [
+            MessageHandler(
+                filters.TEXT & ~filters.COMMAND,
+                get_amount,
+            )
+        ]
+    },
+    fallbacks=[],
+    )
