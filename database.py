@@ -8,7 +8,6 @@ def get_connection():
 
 
 def create_tables():
-def create_tables():
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -27,7 +26,6 @@ def create_tables():
     )
     """)
 
-    # Deposit table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS deposits (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -104,8 +102,8 @@ def add_deposit(user_id, network, amount, txid):
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO deposits(user_id, network, amount, txid)
-        VALUES(?,?,?,?)
+    INSERT INTO deposits(user_id, network, amount, txid)
+    VALUES(?,?,?,?)
     """, (user_id, network, amount, txid))
 
     conn.commit()
