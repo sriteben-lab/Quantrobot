@@ -7,7 +7,9 @@ from database import get_user
 
 async def wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
+    print("Telegram User ID:", update.effective_user.id)
     user = get_user(user_id)
+    print("Database result:", user)
 
     print("Wallet User ID:", user_id)
     print("Database User:", user)
