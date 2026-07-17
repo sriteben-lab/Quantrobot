@@ -97,91 +97,34 @@ async def get_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return AMOUNT
 
     network = context.user_data["network"]
-    print("Selected Network:", network)
-    print("Wallet Address:", addresses[network])
 
-    prices = get_prices()
+addresses = {
+    "BTC": "bc1qhnxdrmy2jpdmnguk8gk2f4dhdsmr9kct2c84c8",
+    "ETH": "0xFe39F71E10Ab423C68397b902100D3a813AC2CE3",
+    "USDT TRC20": "TEr5rD8xZT4P6DebZcRe5JDcpoCXPF5QLH",
+    "USDT ERC20": "0xFe39F71E10Ab423C68397b902100D3a813AC2CE3",
+    "USDC ERC20": "0xFe39F71E10Ab423C68397b902100D3a813AC2CE3",
+}
 
-    price = prices.get(network)
+symbols = {
+    "BTC": "BTC",
+    "ETH": "ETH",
+    "USDT TRC20": "USDT",
+    "USDT ERC20": "USDT",
+    "USDC ERC20": "USDC",
+}
 
-    if price is None:
-        await update.message.reply_text(
-            "❌ Unable to retrieve live prices.\nPlease try again later."
-        )
-        return ConversationHandler.END
+print("Selected Network:", network)
+print("Wallet Address:", addresses[network])
 
-    crypto_amount = usd_amount / price
+prices = get_prices()
 
-    context.user_data["usd_amount"] = usd_amount
-    context.user_data["crypto_amount"] = crypto_amount
+price = prices.get(network)
 
-    addresses = {
-        "BTC": "bc1qhnxdrmy2jpdmnguk8gk2f4dhdsmr9kct2c84c8",
-        "ETH": "0xFe39F71E10Ab423C68397b902100D3a813AC2CE3",
-        "USDT TRC20": "TEr5rD8xZT4P6DebZcRe5JDcpoCXPF5QLH",
-        "USDT ERC20": "0xFe39F71E10Ab423C68397b902100D3a813AC2CE3",
-        "USDC ERC20": "0xFe39F71E10Ab423C68397b902100D3a813AC2CE3",
-    }
-
-    symbols = {
-        "BTC": "BTC",
-        "ETH": "ETH",
-        "USDT TRC20": "USDT",
-        "USDT ERC20": "USDT",
-        "USDC ERC20": "USDC",
-    }
-
-    qr_file = generate_qr(
-        network,
-        addresses[network],
-        crypto_amount
+if price is None:
+    await update.message.reply_text(
+        "❌ Unable to retrieve live prices.\nPlease try again later."
     )
-
-    with open(qr_file, "rb") as photo:
-        await update.message.reply_photo(
-            photo=photo,
-            caption=f"""
-💳 *Deposit Details*
-
-💵 Deposit Value:
-${usd_amount:,.2f}
-
-🌐 Network:
-{network}
-
-📈 Current Price:
-${price:,.2f}
-
-🪙 Send Exactly:
-
-`{crypto_amount:.8f} {symbols[network]}`
-
-📥 Deposit Address:
-
-`{addresses[network]}`
-
-📱 Scan the QR code with your wallet to automatically fill in the wallet address and payment amount.
-
-📋 Tap and hold the address above to copy it.
-
-1️⃣ Send exactly the amount shown above.
-
-2️⃣ After completing the transfer:
-
-3️⃣ Copy your Transaction Hash (TXID).
-
-4️⃣ Click **📤 Submit Transaction Hash**.
-
-5️⃣ Paste your TXID.
-
-⚠️ Send only **{symbols[network]}** through the selected network.
-
-⚠️ Sending funds through the wrong network may result in permanent loss of funds.
-""",
-            parse_mode="Markdown",
-            reply_markup=submit_keyboard,
-        )
-
     return ConversationHandler.END
 
 
