@@ -1,16 +1,7 @@
-from telegram import Update, ReplyKeyboardMarkup
+from telegram import Update
 from telegram.ext import ContextTypes, MessageHandler, filters
 
-fund_keyboard = ReplyKeyboardMarkup(
-    [
-        ["₿ BTC", "♦ ETH"],
-        ["💲 USDT (TRC20)", "💲 USDT (ERC20)"],
-        ["💲 USDC (ERC20)"],
-        ["⬅ Back to Wallet"],
-        ["🏠 Main Menu"],
-    ],
-    resize_keyboard=True,
-)
+from keyboards import fund_keyboard
 
 
 async def fund_wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
