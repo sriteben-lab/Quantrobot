@@ -33,3 +33,9 @@ async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=wallet_menu,
         parse_mode="Markdown"
     )
+
+
+history_handler = MessageHandler(
+    filters.Regex("^📜 Transaction History$"),
+    history,
+)
