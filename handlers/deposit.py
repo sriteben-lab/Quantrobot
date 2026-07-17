@@ -162,6 +162,8 @@ ${price:,.2f}
 
 `{addresses[network]}`
 
+📱 Scan the QR code with your wallet to automatically fill in the wallet address and payment amount.
+
 📋 Tap and hold the address above to copy it.
 
 ━━━━━━━━━━━━━━
