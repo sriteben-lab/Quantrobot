@@ -1,6 +1,8 @@
 from telegram import ReplyKeyboardMarkup
 
+# ==========================
 # Main Menu
+# ==========================
 main_menu = ReplyKeyboardMarkup(
     [
         ["🆕 New User Registration"],
@@ -9,26 +11,43 @@ main_menu = ReplyKeyboardMarkup(
         ["📤 Submit KYC", "💰 Submit Refund Request"],
         ["📊 Check Status", "💬 Chat with Support"],
         ["📋 My Profile"],
-        ["ℹ️ Help"]
+        ["ℹ️ Help"],
     ],
     resize_keyboard=True
 )
 
+# ==========================
 # Wallet Menu
+# ==========================
 wallet_menu = ReplyKeyboardMarkup(
     [
         ["💳 Fund Wallet"],
         ["📜 Transaction History"],
-        ["⬅ Back"]
+        ["🏠 Main Menu"],
     ],
     resize_keyboard=True
 )
 
+# ==========================
+# Fund Wallet Menu
+# ==========================
+fund_keyboard = ReplyKeyboardMarkup(
+    [
+        ["₿ BTC", "♦ ETH"],
+        ["💲 USDT (TRC20)", "💲 USDT (ERC20)"],
+        ["💲 USDC (ERC20)"],
+        ["🏠 Main Menu"],
+    ],
+    resize_keyboard=True
+)
+
+# ==========================
 # Cancel Menu
+# ==========================
 cancel_menu = ReplyKeyboardMarkup(
     [
         ["🏠 Main Menu"],
-        ["❌ Cancel"]
+        ["❌ Cancel"],
     ],
     resize_keyboard=True
 )
