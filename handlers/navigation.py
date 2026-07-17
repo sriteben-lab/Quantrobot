@@ -6,20 +6,19 @@ from handlers.wallet import wallet
 
 
 async def navigation(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
 
-    if update.message.text == "🏠 Main Menu":
-
+    if text == "🏠 Main Menu":
         await update.message.reply_text(
             "🏠 Main Menu",
             reply_markup=main_menu
         )
 
-    elif update.message.text == "⬅ Back to Wallet":
-
+    elif text == "⬅ Back" or text == "⬅ Back to Wallet":
         await wallet(update, context)
 
 
 navigation_handler = MessageHandler(
-    filters.Regex("^(🏠 Main Menu|⬅ Back to Wallet)$"),
+    filters.Regex("^(🏠 Main Menu|⬅ Back|⬅ Back to Wallet)$"),
     navigation,
 )
