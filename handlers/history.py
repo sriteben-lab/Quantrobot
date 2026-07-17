@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import ContextTypes, MessageHandler, filters
 
 from database import get_user_deposits
+from keyboards import wallet_menu
 
 
 async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -10,14 +11,14 @@ async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if not deposits:
         await update.message.reply_text(
-            "📜 No transactions found."
+            "📜 No transactions found.",
+            reply_markup=wallet_menu
         )
         return
 
     message = "📜 *Transaction History*\n\n"
 
     for network, amount, txid, status in deposits:
-
         message += (
             f"🌐 Network: {network}\n"
             f"💵 Amount: {amount}\n"
@@ -29,11 +30,6 @@ async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         message,
+        reply_markup=wallet_menu,
         parse_mode="Markdown"
     )
-
-
-history_handler = MessageHandler(
-    filters.Regex("^📜 Transaction History$"),
-    history
-      )
