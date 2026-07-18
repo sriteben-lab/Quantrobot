@@ -59,6 +59,20 @@ def create_tables():
     )
     """)
 
+    # ==========================
+    # REFUNDS TABLE
+    # ==========================
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS refunds (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        full_name TEXT,
+        txid TEXT,
+        reason TEXT,
+        status TEXT DEFAULT 'Pending'
+    )
+    """)
+
     conn.commit()
     conn.close()
 
@@ -198,6 +212,78 @@ def get_user_deposits(user_id):
     conn.close()
 
     return deposits
+
+
+# ==========================
+# REFUND FUNCTIONS
+# ==========================
+
+def add_refund(user_id, full_name, txid, reason):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    INSERT INTO refunds (
+        user_id,
+        full_name,
+        txid,
+        reason
+    )
+    VALUES (?, ?, ?, ?)
+    """, (
+        user_id,
+        full_name,
+        txid,
+        reason
+    ))
+
+    conn.commit()
+    conn.close()
+
+
+def get_pending_refunds():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT
+        id,
+        user_id,
+        full_name,
+        txid,
+        reason,
+        status
+    FROM refunds
+    WHERE status='Pending'
+    ORDER BY id DESC
+    """)
+
+    refunds = cursor.fetchall()
+
+    conn.close()
+
+    return refunds
+
+
+def get_user_refunds(user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT
+        txid,
+        reason,
+        status
+    FROM refunds
+    WHERE user_id=?
+    ORDER BY id DESC
+    """, (user_id,))
+
+    refunds = cursor.fetchall()
+
+    conn.close()
+
+    return refunds
 
 
 # ==========================
