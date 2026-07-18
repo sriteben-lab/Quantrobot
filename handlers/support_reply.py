@@ -1,5 +1,3 @@
-import re
-
 from telegram import Update
 from telegram.ext import (
     ContextTypes,
@@ -7,45 +5,64 @@ from telegram.ext import (
     filters,
 )
 
+from config import ADMIN_ID
+
 
 async def reply_to_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    # Only allow admin
+    if update.effective_user.id != ADMIN_ID:
+        return
 
     if not update.message.reply_to_message:
         return
 
-    original_text = update.message.reply_to_message.text or ""
+    replied_message_id = update.message.reply_to_message.message_id
 
-    # Look for: User ID: `123456789`
-    match = re.search(r"User ID:\s*`?(\d+)`?", original_text)
+    user_id = context.bot_data.get(replied_message_id)
 
-    if not match:
+    if not user_id:
+
         await update.message.reply_text(
-            "❌ Could not determine the user's ID.\n"
-            "Please reply directly to a support message sent by the bot."
+            "❌ Unable to identify the user."
         )
+
         return
 
-    user_id = int(match.group(1))
+    # ---------- TEXT ----------
+    if update.message.text:
 
-    try:
         await context.bot.send_message(
             chat_id=user_id,
-            text=(
-                "💬 *Support Reply*\n\n"
-                f"{update.message.text}"
-            ),
+            text=f"💬 *Support Reply*\n\n{update.message.text}",
             parse_mode="Markdown",
         )
 
-        await update.message.reply_text("✅ Reply sent successfully.")
+    # ---------- PHOTO ----------
+    elif update.message.photo:
 
-    except Exception as e:
-        await update.message.reply_text(
-            f"❌ Failed to send reply.\n\n{e}"
+        photo = update.message.photo[-1].file_id
+
+        caption = update.message.caption or ""
+
+        await context.bot.send_photo(
+            chat_id=user_id,
+            photo=photo,
+            caption=f"💬 Support Reply\n\n{caption}",
         )
+
+    else:
+
+        await update.message.reply_text(
+            "❌ Only text messages and photos can be sent."
+        )
+
+        return
+
+    await update.message.reply_text("✅ Reply delivered successfully.")
 
 
 reply_handler = MessageHandler(
-    filters.REPLY & filters.TEXT,
+    filters.REPLY & (filters.TEXT | filters.PHOTO),
     reply_to_user,
-)
+    )
