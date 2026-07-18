@@ -307,34 +307,17 @@ async def finish_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Send to Admin
     # ==========================
 
-    admin_message = f"""
-💰 NEW REFUND REQUEST
-
-━━━━━━━━━━━━━━
-
-👤 Name:
-{full_name}
-
-🆔 User ID:
-{user.id}
-
-📅 Investment Date:
-{investment_date}
-
-👤 Profile:
-{profile_id}
-
-💵 Amount:
-{investment_amount}
-
-🪙 Cryptocurrency:
-{cryptocurrency}
-
-🏦 Exchange/Wallet:
-{exchange_wallet}
-
-📤 Sender Wallet:
-{sender_wallet}
+    admin_message = (
+    f"💰 NEW REFUND REQUEST\n\n"
+    f"👤 User ID: {update.effective_user.id}\n"
+    f"📅 Investment Date: {context.user_data['investment_date']}\n"
+    f"🆔 Profile: {context.user_data['profile_id']}\n"
+    f"💵 Amount: {context.user_data['investment_amount']}\n"
+    f"🪙 Cryptocurrency: {context.user_data['cryptocurrency']}\n"
+    f"🏦 Exchange/Wallet: {context.user_data['exchange_wallet']}\n"
+    f"📤 Sender Wallet:\n{context.user_data['sender_wallet']}\n\n"
+    f"📎 Evidence:\n{context.user_data['refund_text']}"
+)
 
 # ==========================
 # Receive Photos
