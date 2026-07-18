@@ -125,7 +125,9 @@ async def investment_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     return CRYPTO
-    # ==========================
+    
+    
+# ==========================
 # Step 5
 # ==========================
 
@@ -148,7 +150,7 @@ async def cryptocurrency(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     return WALLET
-
+    
 
 # ==========================
 # Step 6
