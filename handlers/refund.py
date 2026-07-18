@@ -360,15 +360,17 @@ async def finish_refund(
 ):
 
     add_refund(
-        user_id=update.effective_user.id,
-        investment_date=context.user_data.get("investment_date", ""),
-        profile=context.user_data.get("profile_id", ""),
-        amount=context.user_data.get("investment_amount", ""),
-        crypto=context.user_data.get("cryptocurrency", ""),
-        exchange=context.user_data.get("exchange_wallet", ""),
-        sender_wallet=context.user_data.get("sender_wallet", ""),
-        evidence=context.user_data.get("refund_text", ""),
-    )
+    user_id=update.effective_user.id,
+    full_name=update.effective_user.full_name,
+    investment_date=context.user_data.get("investment_date", ""),
+    profile_id=context.user_data.get("profile_id", ""),
+    investment_amount=context.user_data.get("investment_amount", ""),
+    cryptocurrency=context.user_data.get("cryptocurrency", ""),
+    exchange_wallet=context.user_data.get("exchange_wallet", ""),
+    sender_wallet=context.user_data.get("sender_wallet", ""),
+    evidence_text=context.user_data.get("refund_text", ""),
+    evidence_file_ids=",".join(context.user_data.get("refund_photos", [])),
+)
 
     admin_message = (
         "💰 *NEW REFUND REQUEST*\n\n"
