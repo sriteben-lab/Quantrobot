@@ -1,4 +1,5 @@
 from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import ContextTypes, MessageHandler, filters
 
 from database import get_user
@@ -27,25 +28,25 @@ async def referrals(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         f"""
-👥 *Referral Program*
+👥 <b>Referral Program</b>
 
-🔗 *Your Referral Link*
+🔗 <b>Your Referral Link</b>
 
-{referral_link}
+<code>{referral_link}</code>
 
 ━━━━━━━━━━━━━━
 
-👤 *Total Referrals*
+👤 <b>Total Referrals</b>
 {referrals_count}
 
-💰 *Affiliate Earnings*
+💰 <b>Affiliate Earnings</b>
 ${affiliate_balance:,.2f}
 
 Invite your friends using your personal referral link.
 
 When a referred user makes their first verified investment, you'll receive a commission automatically.
 """,
-        parse_mode="Markdown",
+        parse_mode=ParseMode.HTML,
         reply_markup=main_menu,
     )
 
@@ -53,4 +54,4 @@ When a referred user makes their first verified investment, you'll receive a com
 referral_handler = MessageHandler(
     filters.Regex("^👥 Referrals$"),
     referrals,
-      )
+)
