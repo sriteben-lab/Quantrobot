@@ -231,7 +231,7 @@ async def sender_wallet(
     context.user_data["refund_text"] = ""
 
     context.user_data["refund_photos"] = []
-
+..,.
     await update.message.reply_text(
         "*Step 7 of 7*\n\n"
 
@@ -275,19 +275,15 @@ async def sender_wallet(
 # RECEIVE PHOTO
 # ==========================================
 
-async def receive_photo(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def receive_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    file_id = update.message.photo[-1].file_id
+    photo = update.message.photo[-1]
 
-    context.user_data["refund_photos"].append(file_id)
+    context.user_data.setdefault("refund_photos", []).append(photo.file_id)
 
     await update.message.reply_text(
-        "✅ Screenshot received.\n\n"
-        "You can upload another screenshot or press ✅ Done.",
-        reply_markup=done_keyboard,
+        "Photo received.\n\n"
+        "Send another photo or press ✅ Done."
     )
 
     return EVIDENCE
