@@ -336,47 +336,95 @@ async def finish_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
 📤 Sender Wallet:
 {sender_wallet}
 
-━━━━━━━━━━━━━━
+# ==========================
+# Receive Photos
+# ==========================
 
-📄 Evidence
+async def receive_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-{evidence_text}
-"""
+    photo = update.message.photo[-1].file_id
 
-    await context.bot.send_message(
-        chat_id=ADMIN_ID,
-        text=admin_message,
-    )
-
-    # Forward uploaded photos
-    for photo in photos:
-        await context.bot.send_photo(
-            chat_id=ADMIN_ID,
-            photo=photo,
-        )
-
-    # ==========================
-    # Confirmation to User
-    # ==========================
+    context.user_data["refund_photos"].append(photo)
 
     await update.message.reply_text(
-        "✅ *Your refund request has been submitted successfully.*\n\n"
-
-        "Your request has been forwarded to our Refund Review Team.\n\n"
-
-        "To help speed up the investigation and any eligible refund or balance credit, "
-        "please complete your *Know Your Customer (KYC)* verification if you have not already done so.\n\n"
-
-        "Completing KYC helps us verify account ownership, protect your funds, "
-        "and process approved refund requests more efficiently.\n\n"
-
-        "You will be notified once the review has been completed.",
-
-        parse_mode="Markdown",
-        reply_markup=main_menu,
+        "✅ Photo received.\n\n"
+        "You can upload another photo or press ✅ Done."
     )
 
-    context.user_data.clear()
+    return EVIDENCE
+
+
+# ==========================
+# Receive TXID / Evidence Text
+# ==========================
+
+async def evidence(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    if update.message.text == "✅ Done":
+        return await finish_refund(update, context)
+
+    existing = context.user_data.get("refund_text", "")
+
+    context.user_data["refund_text"] = (
+        existing + "\n\n" + update.message.text
+    )
+
+    await update.message.reply_text(
+        "✅ Evidence saved.\n\n"
+        "Send another TXID/photo or press ✅ Done."
+    )
+
+    return EVIDENCE
+
+
+# ==========================
+# Finish Refund
+# ==========================
+
+async def finish_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    add_refund(
+        user_id=update.effective_user.id,
+        investment_date=context.user_data["investment_date"],
+        profile=context.user_data["profile_id"],
+        amount=context.user_data["investment_amount"],
+        crypto=context.user_data["cryptocurrency"],
+        wallet=context.user_data["exchange_wallet"],
+        address=context.user_data["sender_wallet"],
+        evidence=context.user_data["refund_text"],
+    )
+
+    admin_message = (
+        "💰 NEW REFUND REQUEST\n\n"
+        f"User: {update.effective_user.id}\n\n"
+        f"Investment Date: {context.user_data['investment_date']}\n"
+        f"Profile: {context.user_data['profile_id']}\n"
+        f"Amount: {context.user_data['investment_amount']}\n"
+        f"Crypto: {context.user_data['cryptocurrency']}\n"
+        f"Exchange: {context.user_data['exchange_wallet']}\n"
+        f"Sender Wallet:\n{context.user_data['sender_wallet']}\n\n"
+        f"Evidence:\n{context.user_data['refund_text']}"
+    )
+
+    await context.bot.send_message(
+        ADMIN_ID,
+        admin_message,
+    )
+
+    for photo in context.user_data["refund_photos"]:
+        await context.bot.send_photo(
+            ADMIN_ID,
+            photo,
+        )
+
+    await update.message.reply_text(
+        "✅ Your refund request has been submitted successfully.\n\n"
+        "Your request has been forwarded to our Refund Review Team.\n\n"
+        "To help speed up the investigation and any eligible refund or balance credit, "
+        "please complete your KYC verification if you have not already done so.\n\n"
+        "You will be notified once the review has been completed.",
+        reply_markup=main_menu,
+    )
 
     return ConversationHandler.END
 
@@ -387,15 +435,12 @@ async def finish_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    context.user_data.clear()
-
     await update.message.reply_text(
         "❌ Refund request cancelled.",
         reply_markup=main_menu,
     )
 
     return ConversationHandler.END
-
 
 # ==========================
 # Conversation Handler
