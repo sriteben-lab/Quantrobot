@@ -349,6 +349,66 @@ async def evidence(
     )
 
     return EVIDENCE
+    # =====================================
+# RECEIVE EVIDENCE TEXT
+# =====================================
+
+async def receive_evidence_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    text = update.message.text
+
+    # User finished
+    if text == "✅ Done":
+        return await finish_refund(update, context)
+
+    # User cancelled
+    if text == "❌ Cancel":
+        await update.message.reply_text(
+            "Refund request cancelled.",
+            reply_markup=main_menu(),
+        )
+        return ConversationHandler.END
+
+    current = context.user_data.get("refund_text", "")
+
+    context.user_data["refund_text"] = current + "\n\n" + text
+
+    await update.message.reply_text(
+        "Evidence saved.\n\n"
+        "Send more screenshots, photos, TXIDs or press ✅ Done."
+    )
+
+    return EVIDENCE
+# =====================================
+# RECEIVE EVIDENCE TEXT
+# =====================================
+
+async def receive_evidence_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    text = update.message.text
+
+    # User finished
+    if text == "✅ Done":
+        return await finish_refund(update, context)
+
+    # User cancelled
+    if text == "❌ Cancel":
+        await update.message.reply_text(
+            "Refund request cancelled.",
+            reply_markup=main_menu(),
+        )
+        return ConversationHandler.END
+
+    current = context.user_data.get("refund_text", "")
+
+    context.user_data["refund_text"] = current + "\n\n" + text
+
+    await update.message.reply_text(
+        "Evidence saved.\n\n"
+        "Send more screenshots, photos, TXIDs or press ✅ Done."
+    )
+
+    return EVIDENCE
     
 # ==========================================
 # FINISH REFUND
