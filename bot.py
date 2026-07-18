@@ -19,6 +19,8 @@ from handlers.deposit import deposit_handler
 from handlers.submit_tx import submit_tx_handler
 from handlers.history import history_handler
 from handlers.support import support_handler
+from handlers.support_reply import reply_handler
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -101,6 +103,8 @@ def main():
     app.add_handler(submit_tx_handler)
     app.add_handler(history_handler)
     app.add_handler(support_handler)
+    app.add_handler(reply_handler)
+    
 
      
     menu_filter = filters.Regex(
