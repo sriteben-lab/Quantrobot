@@ -465,56 +465,36 @@ refund_handler = ConversationHandler(
         )
     ],
 
-    states={
+    states = {
+    DATE: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, investment_date)
+    ],
 
-        DATE: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                investment_date,
-            )
-        ],
+    PROFILE: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, profile_id)
+    ],
 
-        PROFILE: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                profile_id,
-            )
-        ],
+    AMOUNT: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, investment_amount)
+    ],
 
-        AMOUNT: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                investment_amount,
-            )
-        ],
+    CRYPTO: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, cryptocurrency)
+    ],
 
-        CRYPTO: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                cryptocurrency,
-            )
-        ],
+    WALLET: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, exchange_wallet)
+    ],
 
-        WALLET: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                exchange_wallet,
-            )
-        ],
+    ADDRESS: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, sender_wallet)
+    ],
 
-        ADDRESS: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                sender_wallet,
-            )
-        ],
-
-        EVIDENCE: [
-
-            MessageHandler(
-                filters.PHOTO,
-                receive_photo,
-            ),
+    EVIDENCE: [
+        MessageHandler(filters.PHOTO, receive_photo),
+        MessageHandler(filters.TEXT & ~filters.COMMAND, finish_refund),
+    ],
+}
 
             MessageHandler(
                 filters.Document.IMAGE,
