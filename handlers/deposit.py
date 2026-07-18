@@ -161,9 +161,9 @@ ${price:,.2f}
 
 `{addresses[network]}`
 
-📱 Scan the QR code with your wallet to automatically fill in the wallet address and payment amount.
+📱 Scan the QR code with a compatible wallet (e.g. Trust Wallet).
 
-📋 Tap and hold the address above to copy it.
+If your wallet reports **"Chain not supported"**, copy the wallet address above and paste it manually into your wallet.
 
 ━━━━━━━━━━━━━━
 
