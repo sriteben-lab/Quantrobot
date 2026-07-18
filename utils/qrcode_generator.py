@@ -4,17 +4,14 @@ import tempfile
 
 def generate_qr(network, address, amount):
 
-    # Use only the wallet address in the QR code.
-    # Most wallets recognize this reliably.
-    qr_data = address
-
     qr = qrcode.QRCode(
         version=1,
         box_size=10,
         border=4,
     )
 
-    qr.add_data(qr_data)
+    qr.add_data(address)
+
     qr.make(fit=True)
 
     image = qr.make_image(fill_color="black", back_color="white")
