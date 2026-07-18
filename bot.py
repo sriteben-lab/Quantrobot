@@ -24,11 +24,18 @@ from handlers.help import help_handler
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    if context.args:
+        try:
+            context.user_data["referrer_id"] = int(context.args[0])
+        except ValueError:
+            pass
+
     await update.message.reply_text(
         "🎉 Welcome to Quantro Network!\n\n"
         "Please choose an option from the menu below.",
         reply_markup=main_menu,
-    )
+)
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
