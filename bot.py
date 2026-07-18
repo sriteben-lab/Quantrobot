@@ -20,6 +20,7 @@ from handlers.submit_tx import submit_tx_handler
 from handlers.history import history_handler
 from handlers.support import support_handler
 from handlers.support_reply import reply_handler
+from handlers.help import help_handler
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -104,7 +105,7 @@ def main():
     app.add_handler(history_handler)
     app.add_handler(support_handler)
     app.add_handler(reply_handler)
-    
+    app.add_handler(help_handler)
 
      
     menu_filter = filters.Regex(
