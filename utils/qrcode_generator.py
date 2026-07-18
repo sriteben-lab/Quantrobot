@@ -21,6 +21,8 @@ def generate_qr(network, address, amount):
 
     else:
         qr_data = address
+        
+    print("QR DATA:", qr_data)   
 
     qr = qrcode.QRCode(
         version=1,
