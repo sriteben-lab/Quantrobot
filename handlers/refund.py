@@ -227,11 +227,9 @@ async def sender_wallet(
 ):
 
     context.user_data["sender_wallet"] = update.message.text
-
     context.user_data["refund_text"] = ""
-
     context.user_data["refund_photos"] = []
-..,.
+
     await update.message.reply_text(
         "*Step 7 of 7*\n\n"
 
