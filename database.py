@@ -39,9 +39,11 @@ def create_tables():
     )
     """)
 
-    # Add new column if it doesn't already exist
+    # Add crypto_amount column if it doesn't exist
     try:
-        cursor.execute("ALTER TABLE deposits ADD COLUMN crypto_amount REAL")
+        cursor.execute(
+            "ALTER TABLE deposits ADD COLUMN crypto_amount REAL"
+        )
     except sqlite3.OperationalError:
         pass
 
@@ -135,9 +137,18 @@ def get_pending_deposits():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        "SELECT * FROM deposits WHERE status='Pending'"
-    )
+    cursor.execute("""
+        SELECT
+            id,
+            user_id,
+            network,
+            amount,
+            crypto_amount,
+            txid,
+            status
+        FROM deposits
+        WHERE status='Pending'
+    """)
 
     deposits = cursor.fetchall()
 
@@ -151,7 +162,12 @@ def get_user_deposits(user_id):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT network, amount, crypto_amount, txid, status
+        SELECT
+            network,
+            amount,
+            crypto_amount,
+            txid,
+            status
         FROM deposits
         WHERE user_id=?
         ORDER BY id DESC
