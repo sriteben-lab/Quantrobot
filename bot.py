@@ -38,28 +38,11 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
-    # Return to Main Menu
     if text == "🏠 Main Menu":
         await update.message.reply_text(
             "🏠 Main Menu",
-            reply_markup=main_menu
+            reply_markup=main_menu,
         )
-        return
-
-    # Ignore messages already handled elsewhere
-    ignored = [
-        "💼 Wallet",
-        "💳 Fund Wallet",
-        "📜 Transaction History",
-        "📤 Submit Transaction Hash",
-        "₿ BTC",
-        "♦ ETH",
-        "💲 USDT (TRC20)",
-        "💲 USDT (ERC20)",
-        "💲 USDC (ERC20)",
-    ]
-
-    if text in ignored:
         return
 
     if text == "📈 Investment Plans":
@@ -97,16 +80,8 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "💬 Support module is under development."
         )
 
-    elif text == "📋 My Profile":
-        return
-
-    elif text == "🆕 New User Registration":
-        return
-
-    else:
-        await update.message.reply_text(
-            "Please choose an option from the menu."
-        )
+    elif text == "ℹ️ Help":
+        await help_command(update, context)
 
 
 def main():
@@ -117,6 +92,7 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
 
+    
     app.add_handler(registration_handler)
     app.add_handler(profile_handler)
     app.add_handler(wallet_handler)
@@ -125,9 +101,16 @@ def main():
     app.add_handler(submit_tx_handler)
     app.add_handler(history_handler)
 
-    # Generic handler MUST be last
+     
+    menu_filter = filters.Regex(
+        r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📤 Submit KYC|💰 Submit Refund Request|📊 Check Status|💬 Chat with Support|ℹ️ Help|🏠 Main Menu)$"
+    )
+
     app.add_handler(
-        MessageHandler(filters.TEXT & ~filters.COMMAND, buttons)
+        MessageHandler(
+            menu_filter,
+            buttons,
+        )
     )
 
     print("✅ Quantro Network Bot Started")
@@ -137,3 +120,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+   
