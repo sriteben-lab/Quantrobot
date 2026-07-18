@@ -7,7 +7,12 @@ from telegram.ext import (
     filters,
 )
 
-from database import add_user, user_exists
+from database import (
+    add_user,
+    user_exists,
+    set_referrer,
+    get_referrer,
+)
 from keyboards import main_menu
 
 NAME, EMAIL, PHONE, COUNTRY = range(4)
@@ -44,17 +49,30 @@ async def phone(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def country(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    user_id = update.effective_user.id
+
     add_user(
-        update.effective_user.id,
+        user_id,
         context.user_data["name"],
         context.user_data["email"],
         context.user_data["phone"],
-        update.message.text
+        update.message.text,
     )
+
+    # Save referral if user joined through a referral link
+    referrer_id = context.user_data.get("referrer_id")
+
+    if (
+        referrer_id
+        and referrer_id != user_id
+        and get_referrer(user_id) is None
+    ):
+        set_referrer(user_id, referrer_id)
 
     await update.message.reply_text(
         "🎉 Registration completed successfully!",
-        reply_markup=main_menu
+        reply_markup=main_menu,
     )
 
     return ConversationHandler.END
