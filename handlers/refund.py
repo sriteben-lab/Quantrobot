@@ -436,29 +436,35 @@ refund_handler = ConversationHandler(
         )
     ],
     states={
-        DATE: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, investment_date)
-        ],
-        PROFILE: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, profile_id)
-        ],
-        AMOUNT: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, cryptocurrency)
-        ],
-        CRYPTO: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, exchange_wallet)
-        ],
-        WALLET: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, sender_wallet)
-        ],
-        ADDRESS: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, evidence)
-        ],
-        EVIDENCE: [
-            MessageHandler(filters.PHOTO, receive_photo),
-            MessageHandler(filters.TEXT & ~filters.COMMAND, finish_refund),
-        ],
-    },
+    DATE: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, investment_date),
+    ],
+
+    PROFILE: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, profile_id),
+    ],
+
+    AMOUNT: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, investment_amount),
+    ],
+
+    CRYPTO: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, cryptocurrency),
+    ],
+
+    WALLET: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, exchange_wallet),
+    ],
+
+    ADDRESS: [
+        MessageHandler(filters.TEXT & ~filters.COMMAND, sender_wallet),
+    ],
+
+    EVIDENCE: [
+        MessageHandler(filters.PHOTO, receive_photo),
+        MessageHandler(filters.TEXT & ~filters.COMMAND, evidence),
+    ],
+},
     fallbacks=[
         CommandHandler("cancel", cancel),
     ],
