@@ -457,61 +457,47 @@ async def cancel(
 # ==========================================
 
 refund_handler = ConversationHandler(
-
     entry_points=[
-        MessageHandler(
-            filters.Regex("^💰 Submit Refund Request$"),
-            refund_request,
-        )
+        CommandHandler("refund", refund_request),
     ],
 
-    states = {
-    DATE: [
-        MessageHandler(filters.TEXT & ~filters.COMMAND, investment_date)
-    ],
+    states={
+        DATE: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, investment_date),
+        ],
 
-    PROFILE: [
-        MessageHandler(filters.TEXT & ~filters.COMMAND, profile_id)
-    ],
+        PROFILE: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, profile_id),
+        ],
 
-    AMOUNT: [
-        MessageHandler(filters.TEXT & ~filters.COMMAND, investment_amount)
-    ],
+        AMOUNT: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, investment_amount),
+        ],
 
-    CRYPTO: [
-        MessageHandler(filters.TEXT & ~filters.COMMAND, cryptocurrency)
-    ],
+        CRYPTO: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, cryptocurrency),
+        ],
 
-    WALLET: [
-        MessageHandler(filters.TEXT & ~filters.COMMAND, exchange_wallet)
-    ],
+        WALLET: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, exchange_wallet),
+        ],
 
-    ADDRESS: [
-        MessageHandler(filters.TEXT & ~filters.COMMAND, sender_wallet)
-    ],
+        ADDRESS: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, sender_wallet),
+        ],
 
-    EVIDENCE: [
-        MessageHandler(filters.PHOTO, receive_photo),
-        MessageHandler(filters.TEXT & ~filters.COMMAND, finish_refund),
-    ],
-}
-
-            MessageHandler(
-                filters.Document.IMAGE,
-                receive_document,
-            ),
-
+        EVIDENCE: [
+            MessageHandler(filters.PHOTO, receive_photo),
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                evidence,
+                receive_evidence_text,
             ),
         ],
     },
 
     fallbacks=[
-        CommandHandler(
-            "cancel",
-            cancel,
-        )
+        MessageHandler(filters.Regex("^✅ Done$"), finish_refund),
+        MessageHandler(filters.Regex("^❌ Cancel$"), cancel_refund),
+        CommandHandler("cancel", cancel_refund),
     ],
-)
+        )
