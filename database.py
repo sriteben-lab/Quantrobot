@@ -13,31 +13,43 @@ def create_tables():
 
     # Users Table
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS users (
-        user_id INTEGER PRIMARY KEY,
-        full_name TEXT,
-        email TEXT,
-        phone TEXT,
-        country TEXT,
-        wallet_address TEXT,
-        kyc_status TEXT DEFAULT 'Not Submitted',
-        wallet_balance REAL DEFAULT 0.0,
-        affiliate_balance REAL DEFAULT 0.0,
-        referrals INTEGER DEFAULT 0
-    )
-    """)
+CREATE TABLE IF NOT EXISTS users (
+    user_id INTEGER PRIMARY KEY,
+    full_name TEXT,
+    email TEXT,
+    phone TEXT,
+    country TEXT,
+    wallet_address TEXT,
+    kyc_status TEXT DEFAULT 'Not Submitted',
+    wallet_balance REAL DEFAULT 0.0,
+    affiliate_balance REAL DEFAULT 0.0,
+    referrals INTEGER DEFAULT 0
+)
+""")
 
-    # Deposits Table
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS deposits (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        network TEXT,
-        amount REAL,
-        txid TEXT,
-        status TEXT DEFAULT 'Pending'
-    )
-    """)
+# Add referral columns if they don't already exist
+try:
+    cursor.execute("ALTER TABLE users ADD COLUMN referrer_id INTEGER")
+except sqlite3.OperationalError:
+    pass
+
+try:
+    cursor.execute("ALTER TABLE users ADD COLUMN first_deposit INTEGER DEFAULT 0")
+except sqlite3.OperationalError:
+    pass
+
+# Deposits Table
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS deposits (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    network TEXT,
+    amount REAL,
+    crypto_amount REAL,
+    txid TEXT,
+    status TEXT DEFAULT 'Pending'
+)
+""")
 
     # Add crypto_amount column if it doesn't exist
     try:
