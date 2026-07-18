@@ -22,6 +22,7 @@ from handlers.support import support_handler
 from handlers.support_reply import reply_handler
 from handlers.help import help_handler
 from handlers.referrals import referral_handler
+from handlers.refund import refund_handler
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -110,6 +111,7 @@ def main():
     app.add_handler(reply_handler)
     app.add_handler(help_handler)
     app.add_handler(referral_handler)
+    app.add_handler(refund_handler)
 
      
     menu_filter = filters.Regex(
