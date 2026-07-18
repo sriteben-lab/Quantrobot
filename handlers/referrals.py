@@ -4,8 +4,7 @@ from telegram.ext import ContextTypes, MessageHandler, filters
 from database import get_user
 from keyboards import main_menu
 
-# Replace with your bot username (without @)
-BOT_USERNAME = "QuantroNetworkProBot"
+BOT_USERNAME = "Quantro_networkproBot"
 
 
 async def referrals(update: Update, context: ContextTypes.DEFAULT_TYPE):
