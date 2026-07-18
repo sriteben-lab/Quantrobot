@@ -53,9 +53,7 @@ CREATE TABLE IF NOT EXISTS deposits (
 
     # Add crypto_amount column if it doesn't exist
     try:
-        cursor.execute(
-            "ALTER TABLE deposits ADD COLUMN crypto_amount REAL"
-        )
+        cursor.execute("ALTER TABLE users ADD COLUMN referrer_id INTEGER")
     except sqlite3.OperationalError:
         pass
 
