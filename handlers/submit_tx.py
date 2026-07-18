@@ -25,12 +25,14 @@ async def save_tx(update: Update, context: ContextTypes.DEFAULT_TYPE):
     txid = update.message.text.strip()
 
     network = context.user_data.get("network", "Unknown")
-    amount = context.user_data.get("amount", 0)
+    usd_amount = context.user_data.get("usd_amount", 0)
+    crypto_amount = context.user_data.get("crypto_amount", 0)
 
     add_deposit(
         update.effective_user.id,
         network,
-        amount,
+        usd_amount,
+        crypto_amount,
         txid
     )
 
@@ -40,8 +42,11 @@ async def save_tx(update: Update, context: ContextTypes.DEFAULT_TYPE):
 🌐 Network:
 {network}
 
-💰 Amount:
-{amount}
+💵 Deposit Value:
+${usd_amount:,.2f}
+
+🪙 Amount Sent:
+{crypto_amount:.8f}
 
 📌 Status:
 Pending Verification
@@ -50,9 +55,9 @@ Pending Verification
 
 Your transaction has been received.
 
-The blockchain will be checked automatically.
+Our system will verify it on the blockchain automatically.
 
-Once the required confirmations are reached, your wallet balance will be credited automatically.
+Once confirmed, your wallet balance will be credited.
 """,
         parse_mode="Markdown",
         reply_markup=main_menu,
@@ -60,7 +65,8 @@ Once the required confirmations are reached, your wallet balance will be credite
 
     # Clear temporary deposit data
     context.user_data.pop("network", None)
-    context.user_data.pop("amount", None)
+    context.user_data.pop("usd_amount", None)
+    context.user_data.pop("crypto_amount", None)
 
     return ConversationHandler.END
 
