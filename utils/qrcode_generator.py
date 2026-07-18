@@ -4,25 +4,9 @@ import tempfile
 
 def generate_qr(network, address, amount):
 
-    if network == "BTC":
-        qr_data = f"bitcoin:{address}?amount={amount:.8f}"
-
-    elif network == "ETH":
-        qr_data = f"ethereum:{address}?value={amount:.8f}"
-
-    elif network == "USDT TRC20":
-        qr_data = address
-
-    elif network == "USDT ERC20":
-        qr_data = f"ethereum:{address}"
-
-    elif network == "USDC ERC20":
-        qr_data = f"ethereum:{address}"
-
-    else:
-        qr_data = address
-        
-    print("QR DATA:", qr_data)   
+    # Use only the wallet address in the QR code.
+    # Most wallets recognize this reliably.
+    qr_data = address
 
     qr = qrcode.QRCode(
         version=1,
@@ -37,7 +21,7 @@ def generate_qr(network, address, amount):
 
     temp = tempfile.NamedTemporaryFile(
         suffix=".png",
-        delete=False
+        delete=False,
     )
 
     image.save(temp.name)
