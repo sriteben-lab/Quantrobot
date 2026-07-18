@@ -400,80 +400,38 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ==========================
 # Conversation Handler
 # ==========================
-
 refund_handler = ConversationHandler(
-
     entry_points=[
         MessageHandler(
             filters.Regex("^💰 Submit Refund Request$"),
             refund_request,
         )
     ],
-
     states={
-
         DATE: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                investment_date,
-            )
+            MessageHandler(filters.TEXT & ~filters.COMMAND, investment_date)
         ],
-
         PROFILE: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                profile_id,
-            )
+            MessageHandler(filters.TEXT & ~filters.COMMAND, profile_id)
         ],
-
         AMOUNT: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                investment_amount,
-            )
+            MessageHandler(filters.TEXT & ~filters.COMMAND, cryptocurrency)
         ],
-
         CRYPTO: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                cryptocurrency,
-            )
+            MessageHandler(filters.TEXT & ~filters.COMMAND, exchange_wallet)
         ],
-
         WALLET: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                exchange_wallet,
-            )
+            MessageHandler(filters.TEXT & ~filters.COMMAND, sender_wallet)
         ],
-
         ADDRESS: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                sender_wallet,
-            )
+            MessageHandler(filters.TEXT & ~filters.COMMAND, evidence)
         ],
-
         EVIDENCE: [
-
-            MessageHandler(
-                filters.PHOTO,
-                collect_photo,
-            ),
-
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                collect_text,
-            ),
+            MessageHandler(filters.PHOTO, receive_photo),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, finish_refund),
         ],
     },
-
     fallbacks=[
-        CommandHandler(
-            "cancel",
-            cancel,
-        )
+        CommandHandler("cancel", cancel),
     ],
-),
-        
-    
+)
