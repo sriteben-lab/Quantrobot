@@ -1,53 +1,86 @@
-from telegram import Update
+from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import (
     ConversationHandler,
     MessageHandler,
-    CommandHandler,
     ContextTypes,
+    CommandHandler,
     filters,
 )
 
-from config import ADMIN_CHAT_ID
+from config import ADMIN_ID
 from keyboards import main_menu
 
-SUPPORT = 0
+MESSAGE = 0
+
+cancel_keyboard = ReplyKeyboardMarkup(
+    [
+        ["🏠 Main Menu"]
+    ],
+    resize_keyboard=True,
+)
 
 
 async def support(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "💬 *Customer Support*\n\n"
-        "Please type your message below.\n\n"
-        "Our support team will respond as soon as possible.",
+        "💬 *Chat with Support*\n\n"
+        "Send your message or photo.\n\n"
+        "Our support team will reply as soon as possible.",
         parse_mode="Markdown",
+        reply_markup=cancel_keyboard,
     )
 
-    return SUPPORT
+    return MESSAGE
 
 
 async def receive_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
 
-    text = (
-        "📩 *New Support Message*\n\n"
-        f"👤 Name: {user.full_name}\n"
-        f"🆔 User ID: `{user.id}`\n"
-        f"📛 Username: @{user.username or 'None'}\n\n"
-        f"💬 Message:\n{update.message.text}"
-    )
+    # ---------- TEXT ----------
+    if update.message.text:
 
-    # Send message to admin
-    sent = await context.bot.send_message(
-        chat_id=ADMIN_CHAT_ID,
-        text=text,
-        parse_mode="Markdown",
-    )
+        sent = await context.bot.send_message(
+            chat_id=ADMIN_ID,
+            text=(
+                "📩 *New Support Message*\n\n"
+                f"👤 {user.full_name}\n"
+                f"🆔 `{user.id}`\n\n"
+                f"{update.message.text}"
+            ),
+            parse_mode="Markdown",
+        )
 
-    # Save user id so admin replies go back to this user
+    # ---------- PHOTO ----------
+    elif update.message.photo:
+
+        caption = update.message.caption or "No caption"
+
+        photo = update.message.photo[-1].file_id
+
+        sent = await context.bot.send_photo(
+            chat_id=ADMIN_ID,
+            photo=photo,
+            caption=(
+                "📩 New Support Photo\n\n"
+                f"👤 {user.full_name}\n"
+                f"🆔 {user.id}\n\n"
+                f"{caption}"
+            ),
+        )
+
+    else:
+
+        await update.message.reply_text(
+            "❌ Only text messages and photos are supported."
+        )
+
+        return MESSAGE
+
+    # Save admin message_id -> user_id
     context.bot_data[sent.message_id] = user.id
 
     await update.message.reply_text(
-        "✅ Your message has been sent successfully.\n\n"
-        "Our support team will reply shortly.",
+        "✅ Your message has been sent to support.\n\n"
+        "We'll get back to you shortly.",
         reply_markup=main_menu,
     )
 
@@ -71,14 +104,15 @@ support_handler = ConversationHandler(
         )
     ],
     states={
-        SUPPORT: [
+        MESSAGE: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
+                (filters.TEXT | filters.PHOTO)
+                & ~filters.COMMAND,
                 receive_message,
             )
         ]
     },
     fallbacks=[
-        CommandHandler("cancel", cancel),
+        CommandHandler("cancel", cancel)
     ],
 )
