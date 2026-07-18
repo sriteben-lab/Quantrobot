@@ -21,6 +21,7 @@ from handlers.history import history_handler
 from handlers.support import support_handler
 from handlers.support_reply import reply_handler
 from handlers.help import help_handler
+from handlers.referrals import referral_handler
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -35,7 +36,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🎉 Welcome to Quantro Network!\n\n"
         "Please choose an option from the menu below.",
         reply_markup=main_menu,
-)
+   )
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -58,11 +59,6 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if text == "📈 Investment Plans":
         await update.message.reply_text(
             "📈 Investment module is under development."
-        )
-
-    elif text == "👥 Referrals":
-        await update.message.reply_text(
-            "👥 Referral module is under development."
         )
 
     elif text == "🪪 KYC Status":
@@ -113,6 +109,7 @@ def main():
     app.add_handler(support_handler)
     app.add_handler(reply_handler)
     app.add_handler(help_handler)
+    app.add_handler(referral_handler)
 
      
     menu_filter = filters.Regex(
