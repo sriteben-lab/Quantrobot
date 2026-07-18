@@ -1,4 +1,4 @@
-from telegram import Update, ReplyKeyboardMarkup
+from telegram import Update
 from telegram.ext import (
     ConversationHandler,
     MessageHandler,
@@ -7,55 +7,47 @@ from telegram.ext import (
     filters,
 )
 
-from keyboards import main_menu
 from config import ADMIN_CHAT_ID
+from keyboards import main_menu
 
 SUPPORT = 0
 
-cancel_keyboard = ReplyKeyboardMarkup(
-    [
-        ["🏠 Main Menu"]
-    ],
-    resize_keyboard=True,
-)
-
 
 async def support(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     await update.message.reply_text(
-        "💬 Support\n\n"
-        "Please describe your issue.\n\n"
+        "💬 *Customer Support*\n\n"
+        "Please type your message below.\n\n"
         "Our support team will respond as soon as possible.",
-        reply_markup=cancel_keyboard,
+        parse_mode="Markdown",
     )
 
     return SUPPORT
 
 
 async def receive_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     user = update.effective_user
 
-    text = f"""
-📩 New Support Message
+    text = (
+        "📩 *New Support Message*\n\n"
+        f"👤 Name: {user.full_name}\n"
+        f"🆔 User ID: `{user.id}`\n"
+        f"📛 Username: @{user.username or 'None'}\n\n"
+        f"💬 Message:\n{update.message.text}"
+    )
 
-👤 {user.full_name}
-🆔 {user.id}
-📛 @{user.username}
-
-━━━━━━━━━━━━━━
-
-{update.message.text}
-"""
-
-    await context.bot.send_message(
+    # Send message to admin
+    sent = await context.bot.send_message(
         chat_id=ADMIN_CHAT_ID,
         text=text,
+        parse_mode="Markdown",
     )
+
+    # Save user id so admin replies go back to this user
+    context.bot_data[sent.message_id] = user.id
 
     await update.message.reply_text(
         "✅ Your message has been sent successfully.\n\n"
-        "Our support team will contact you shortly.",
+        "Our support team will reply shortly.",
         reply_markup=main_menu,
     )
 
@@ -63,9 +55,8 @@ async def receive_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     await update.message.reply_text(
-        "Support chat cancelled.",
+        "Support request cancelled.",
         reply_markup=main_menu,
     )
 
@@ -88,6 +79,6 @@ support_handler = ConversationHandler(
         ]
     },
     fallbacks=[
-        CommandHandler("cancel", cancel)
+        CommandHandler("cancel", cancel),
     ],
 )
