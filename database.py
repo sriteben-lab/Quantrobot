@@ -472,4 +472,11 @@ def update_wallet_balance(user_id, amount):
     cursor.execute("""
     UPDATE users
     SET wallet_balance=?
-   
+    WHERE user_id=?
+    """, (
+        amount,
+        user_id,
+    ))
+
+    conn.commit()
+    conn.close()
