@@ -557,16 +557,13 @@ refund_handler = ConversationHandler(
 
         EVIDENCE: [
             MessageHandler(filters.PHOTO, receive_photo),
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                receive_evidence_text,
-            ),
+            MessageHandler(filters.TEXT & filters.Regex("^✅ Done$"), finish_refund),
+            MessageHandler(filters.TEXT & filters.Regex("^❌ Cancel$"), cancel_refund),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, receive_evidence_text),
         ],
     },
 
     fallbacks=[
-    MessageHandler(
-        filters.Regex("^❌ Cancel$"),
-        cancel_refund,
-    ),
-],
+        CommandHandler("cancel", cancel_refund),
+    ],
+)
