@@ -293,15 +293,19 @@ async def finish_refund(
     data = context.user_data
 
     add_refund(
-        investment_date=data.get("investment_date", ""),
-        profile_id=data.get("profile_id", ""),
-        investment_amount=data.get("investment_amount", ""),
-        cryptocurrency=data.get("cryptocurrency", ""),
-        exchange_wallet=data.get("exchange_wallet", ""),
-        sender_wallet=data.get("sender_wallet", ""),
-        evidence=data.get("refund_text", ""),
-        photos=data.get("refund_photos", []),
-    )
+    user_id=update.effective_user.id,
+    full_name=update.effective_user.full_name,
+    investment_date=data.get("investment_date", ""),
+    profile_id=data.get("profile_id", ""),
+    investment_amount=data.get("investment_amount", ""),
+    cryptocurrency=data.get("cryptocurrency", ""),
+    exchange_wallet=data.get("exchange_wallet", ""),
+    sender_wallet=data.get("sender_wallet", ""),
+    evidence_text=data.get("refund_text", ""),
+    evidence_file_ids="|".join(
+        data.get("refund_photos", [])
+    ),
+)
 
     await update.message.reply_text(
         "✅ Your refund request has been submitted successfully.\n\n"
