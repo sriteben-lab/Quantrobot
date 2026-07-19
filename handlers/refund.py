@@ -313,14 +313,50 @@ async def finish_refund(
 
     return ConversationHandler.END
 
-EVIDENCE: [
-    MessageHandler(filters.PHOTO, receive_photo),
-    MessageHandler(filters.Document.IMAGE, receive_document),
-    MessageHandler(filters.TEXT & ~filters.COMMAND, receive_evidence_text),
-],
-fallbacks=[
-    MessageHandler(
-        filters.Regex("^❌ Cancel$"),
-        cancel_refund,
-    ),
-],
+refund_handler = ConversationHandler(
+    entry_points=[
+        MessageHandler(
+            filters.Regex("^💰 Submit Refund Request$"),
+            refund_request,
+        ),
+    ],
+
+    states={
+        DATE: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, investment_date),
+        ],
+
+        PROFILE: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, profile_id),
+        ],
+
+        AMOUNT: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, investment_amount),
+        ],
+
+        CRYPTO: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, cryptocurrency),
+        ],
+
+        WALLET: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, exchange_wallet),
+        ],
+
+        ADDRESS: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, sender_wallet),
+        ],
+
+        EVIDENCE: [
+            MessageHandler(filters.PHOTO, receive_photo),
+            MessageHandler(filters.Document.IMAGE, receive_document),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, receive_evidence_text),
+        ],
+    },
+
+    fallbacks=[
+        MessageHandler(
+            filters.Regex("^❌ Cancel$"),
+            cancel_refund,
+        ),
+    ],
+)
