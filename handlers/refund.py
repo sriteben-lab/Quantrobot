@@ -527,43 +527,36 @@ async def cancel_refund(
 
 refund_handler = ConversationHandler(
     entry_points=[
-        CommandHandler("refund", refund_request),
+        MessageHandler(
+            filters.Regex("^💰 Submit Refund Request$"),
+            refund_request,
+        ),
     ],
-
     states={
         DATE: [
             MessageHandler(filters.TEXT & ~filters.COMMAND, investment_date),
         ],
-
         PROFILE: [
             MessageHandler(filters.TEXT & ~filters.COMMAND, profile_id),
         ],
-
         AMOUNT: [
             MessageHandler(filters.TEXT & ~filters.COMMAND, investment_amount),
         ],
-
         CRYPTO: [
             MessageHandler(filters.TEXT & ~filters.COMMAND, cryptocurrency),
         ],
-
         WALLET: [
             MessageHandler(filters.TEXT & ~filters.COMMAND, exchange_wallet),
         ],
-
         ADDRESS: [
             MessageHandler(filters.TEXT & ~filters.COMMAND, sender_wallet),
         ],
-
         EVIDENCE: [
             MessageHandler(filters.PHOTO, receive_photo),
-            MessageHandler(filters.TEXT & filters.Regex("^✅ Done$"), finish_refund),
-            MessageHandler(filters.TEXT & filters.Regex("^❌ Cancel$"), cancel_refund),
-            MessageHandler(filters.TEXT & ~filters.COMMAND, receive_evidence_text),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, receive_evidence),
         ],
     },
-
     fallbacks=[
-        CommandHandler("cancel", cancel_refund),
+        MessageHandler(filters.Regex("^❌ Cancel$"), cancel_refund),
     ],
-)
+        )
