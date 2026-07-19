@@ -48,35 +48,37 @@ done_keyboard = ReplyKeyboardMarkup(
 )
 
 
-# ==========================================
+# ==========================
+# CANCEL KEYBOARD
+# ==========================
+
+cancel_keyboard = ReplyKeyboardMarkup(
+    [["❌ Cancel"]],
+    resize_keyboard=True
+)
+
+# ==========================
 # STEP 1 OF 7
-# ==========================================
+# ==========================
 
 async def refund_request(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
-
     context.user_data.clear()
 
     context.user_data["refund_photos"] = []
-
     context.user_data["refund_text"] = ""
 
     await update.message.reply_text(
-    "💰 *Refund Request Form*\n\n"
-
-    "*Step 1 of 7*\n\n"
-
-    "📅 When did you make the investment?\n\n"
-
-    "Example:\n"
-
-    "15 June 2025",
-
-    parse_mode="Markdown",
-    reply_markup=cancel_keyboard,
-)
+        "💰 *Refund Request Form*\n\n"
+        "*Step 1 of 7*\n\n"
+        "📅 When did you make the investment?\n\n"
+        "Example:\n"
+        "15 June 2025",
+        parse_mode="Markdown",
+        reply_markup=cancel_keyboard,
+    )
 
     return DATE
 
@@ -85,10 +87,9 @@ async def refund_request(
 # STEP 2 OF 7
 # ==========================================
 
-async def investment_date(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def investment_date(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message.text == "❌ Cancel":
+        return await cancel_refund(update, context)
 
     context.user_data["investment_date"] = update.message.text
 
@@ -116,9 +117,9 @@ async def investment_date(
 # STEP 3 OF 7
 # ==========================================
 
-async def profile_id(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
+async def profile_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message.text == "❌ Cancel":
+        return await cancel_refund(update, context)
 ):
 
     context.user_data["profile_id"] = update.message.text
@@ -484,15 +485,12 @@ async def cancel(
 # CANCEL REFUND
 # ==========================
 
-async def cancel_refund(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def cancel_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
 
     await update.message.reply_text(
         "❌ Refund request cancelled.",
-        reply_markup=main_menu,
+        reply_markup=main_menu(),
     )
 
     return ConversationHandler.END
