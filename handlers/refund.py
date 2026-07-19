@@ -3,6 +3,11 @@ from telegram import (
     ReplyKeyboardMarkup,
 )
 
+from telegram import (
+    Update,
+    ReplyKeyboardMarkup,
+)
+
 from telegram.ext import (
     ConversationHandler,
     MessageHandler,
@@ -14,11 +19,16 @@ from telegram.ext import (
 from config import ADMIN_ID
 from database import add_refund
 from keyboards import main_menu
-cancel_keyboard = ReplyKeyboardMarkup(
-    [["❌ Cancel"]],
-    resize_keyboard=True,
-    one_time_keyboard=False,
-)
+
+async def cancel_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data.clear()
+
+    await update.message.reply_text(
+        "❌ Refund request cancelled.",
+        reply_markup=main_menu,
+    )
+
+    return ConversationHandler.END
 
 # ==========================================
 # Conversation States
