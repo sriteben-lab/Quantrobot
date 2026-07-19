@@ -309,38 +309,6 @@ async def receive_document(
 
     return EVIDENCE
 
-
-# ==========================================
-# RECEIVE TXID / EVIDENCE TEXT
-# ==========================================
-
-async def evidence(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-
-    if update.message.text == "✅ Done":
-        return await finish_refund(update, context)
-
-    previous = context.user_data.get("refund_text", "")
-
-    context.user_data["refund_text"] = (
-        previous
-        + "\n\n"
-        + update.message.text
-    )
-
-    await update.message.reply_text(
-        "✅ Evidence saved.\n\n"
-        "You may upload more screenshots, photos or TXIDs.\n\n"
-        "Press ✅ Done when finished.",
-        done_keyboard = ReplyKeyboardMarkup(
-    [
-        ["✅ Done"],
-        ["❌ Cancel"],
-    ],
-    resize_keyboard=True,
-)
-    return EVIDENCE
     
 # =====================================
 # RECEIVE EVIDENCE TEXT
