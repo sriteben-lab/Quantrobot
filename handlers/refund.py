@@ -40,10 +40,7 @@ cancel_keyboard = ReplyKeyboardMarkup(
 # ==========================================
 
 done_keyboard = ReplyKeyboardMarkup(
-    [
-        ["✅ Done"],
-        ["❌ Cancel"],
-    ],
+    [["✅ Done", "❌ Cancel"]],
     resize_keyboard=True,
 )
 
@@ -54,7 +51,7 @@ done_keyboard = ReplyKeyboardMarkup(
 
 cancel_keyboard = ReplyKeyboardMarkup(
     [["❌ Cancel"]],
-    resize_keyboard=True
+    resize_keyboard=True,
 )
 
 # ==========================
@@ -90,7 +87,7 @@ async def refund_request(
 async def investment_date(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.text == "❌ Cancel":
         return await cancel_refund(update, context)
-
+ 
     context.user_data["investment_date"] = update.message.text
 
     await update.message.reply_text(
@@ -120,7 +117,6 @@ async def investment_date(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def profile_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.text == "❌ Cancel":
         return await cancel_refund(update, context)
-):
 
     context.user_data["profile_id"] = update.message.text
 
@@ -144,10 +140,9 @@ async def profile_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # STEP 4 OF 7
 # ==========================================
 
-async def investment_amount(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def investment_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message.text == "❌ Cancel":
+        return await cancel_refund(update, context)
 
     context.user_data["investment_amount"] = update.message.text
 
@@ -174,10 +169,9 @@ async def investment_amount(
 # STEP 5 OF 7
 # ==========================================
 
-async def cryptocurrency(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def cryptocurrency(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message.text == "❌ Cancel":
+        return await cancel_refund(update, context)
 
     context.user_data["cryptocurrency"] = update.message.text
 
@@ -211,16 +205,15 @@ async def exchange_wallet(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
+    if update.message.text == "❌ Cancel":
+        return await cancel_refund(update, context)
 
     context.user_data["exchange_wallet"] = update.message.text
 
     await update.message.reply_text(
         "*Step 6 of 7*\n\n"
-
         "📤 What wallet address did you send the funds from?\n\n"
-
         "Please paste the complete sending wallet address.",
-
         parse_mode="Markdown",
         reply_markup=cancel_keyboard,
     )
@@ -232,9 +225,9 @@ async def exchange_wallet(
 # STEP 7 OF 7
 # ==========================================
 
-async def sender_wallet(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
+async def sender_wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message.text == "❌ Cancel":
+        return await cancel_refund(update, context)
 ):
     context.user_data["sender_wallet"] = update.message.text
     context.user_data["refund_text"] = ""
@@ -276,14 +269,14 @@ async def sender_wallet(
 # ==========================================
 
 async def receive_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
+    # Save the photo
     photo = update.message.photo[-1]
-
-    context.user_data.setdefault("refund_photos", []).append(photo.file_id)
+    context.user_data["refund_photos"].append(photo.file_id)
 
     await update.message.reply_text(
-        "Photo received.\n\n"
-        "Send another photo or press ✅ Done."
+        "✅ Photo received.\n\n"
+        "Send another photo or press ✅ Done.",
+        reply_markup=done_keyboard,
     )
 
     return EVIDENCE
@@ -354,29 +347,35 @@ async def evidence(
 # RECEIVE EVIDENCE TEXT
 # =====================================
 
-async def receive_evidence_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
+async def receive_evidence_text(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
     text = update.message.text
+
+    # User cancelled
+    if text == "❌ Cancel":
+        context.user_data.clear()
+
+        await update.message.reply_text(
+            "❌ Refund request cancelled.",
+            reply_markup=main_menu(),
+        )
+
+        return ConversationHandler.END
 
     # User finished
     if text == "✅ Done":
         return await finish_refund(update, context)
 
-    # User cancelled
-    if text == "❌ Cancel":
-        await update.message.reply_text(
-            "Refund request cancelled.",
-            reply_markup=main_menu(),
-        )
-        return ConversationHandler.END
-
+    # Save evidence text
     current = context.user_data.get("refund_text", "")
-
     context.user_data["refund_text"] = current + "\n\n" + text
 
     await update.message.reply_text(
-        "Evidence saved.\n\n"
-        "Send more screenshots, photos, TXIDs or press ✅ Done."
+        "✅ Evidence saved.\n\n"
+        "Send more screenshots, photos, TXIDs or press ✅ Done.",
+        reply_markup=done_keyboard,
     )
 
     return EVIDENCE
