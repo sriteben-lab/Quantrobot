@@ -235,57 +235,40 @@ async def sender_wallet(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
-
     context.user_data["sender_wallet"] = update.message.text
     context.user_data["refund_text"] = ""
-    context.user_data["refund_text"] = ""
-context.user_data["refund_photos"] = []
+    context.user_data["refund_photos"] = []
 
-done_keyboard = ReplyKeyboardMarkup(
-    [
-        ["✅ Done", "❌ Cancel"],
-    ],
-    resize_keyboard=True,
-)
+    done_keyboard = ReplyKeyboardMarkup(
+        [
+            ["✅ Done", "❌ Cancel"],
+        ],
+        resize_keyboard=True,
+    )
 
-await update.message.reply_text(
-    "*Step 7 of 7*\n\n"
+    await update.message.reply_text(
+        "*Step 7 of 7*\n\n"
+        "📎 Provide your transaction evidence.\n\n"
+        "Please upload:\n\n"
+        "• Transaction Hash (TXID)\n"
+        "• Deposit Receipt\n"
+        "• Screenshot(s)\n"
+        "• Photo(s)\n\n"
+        "If you have multiple transactions, label them clearly.\n\n"
+        "Example:\n\n"
+        "Transaction 1\n\n"
+        "TXID:\n"
+        "xxxxxxxxxxxxxxxxxxxx\n\n"
+        "Transaction 2\n\n"
+        "TXID:\n"
+        "yyyyyyyyyyyyyyyyyyyy\n\n"
+        "📷 You may upload multiple screenshots or photos.\n\n"
+        "When you have finished uploading everything, press ✅ Done.",
+        parse_mode="Markdown",
+        reply_markup=done_keyboard,
+    )
 
-    "📎 Provide your transaction evidence.\n\n"
-
-    "Please upload:\n\n"
-
-    "• Transaction Hash (TXID)\n"
-    "• Deposit Receipt\n"
-    "• Screenshot(s)\n"
-    "• Photo(s)\n\n"
-
-    "If you have multiple transactions, label them clearly.\n\n"
-
-    "Example:\n\n"
-
-    "Transaction 1\n\n"
-
-    "TXID:\n"
-
-    "xxxxxxxxxxxxxxxxxxxxxxxx\n\n"
-
-    "Transaction 2\n\n"
-
-    "TXID:\n"
-
-    "yyyyyyyyyyyyyyyyyyyyyyyy\n\n"
-
-    "📷 You may upload multiple screenshots or photos.\n\n"
-
-    "When you have finished uploading everything, press ✅ Done.",
-
-    parse_mode="Markdown",
-    reply_markup=done_keyboard,
-)
-
-return EVIDENCE
-
+    return EVIDENCE
 
 # ==========================================
 # RECEIVE PHOTO
