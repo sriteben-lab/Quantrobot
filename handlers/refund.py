@@ -340,9 +340,13 @@ async def evidence(
         "✅ Evidence saved.\n\n"
         "You may upload more screenshots, photos or TXIDs.\n\n"
         "Press ✅ Done when finished.",
-        reply_markup=done_keyboard,
-    )
-
+        done_keyboard = ReplyKeyboardMarkup(
+    [
+        ["✅ Done"],
+        ["❌ Cancel"],
+    ],
+    resize_keyboard=True,
+)
     return EVIDENCE
     
 # =====================================
