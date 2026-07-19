@@ -308,16 +308,15 @@ async def finish_refund(
 )
 
     await update.message.reply_text(
-        "✅ Your refund request has been submitted successfully.\n\n"
-        "Your request has been forwarded to our Refund Review Team.
-
-         To help speed up the investigation and any eligible refund or balance credit, please complete your Know Your Customer (KYC) verification if you have not already done so.
-
-         Completing KYC helps us verify account ownership, protect your funds, and process approved refund requests more efficiently.
-
-         You will be notified once the review has been completed..",
-         reply_markup=main_menu,
-    )
+    "✅ *Your refund request has been submitted successfully.*\n\n"
+    "Your request has been forwarded to our *Refund Review Team*.\n\n"
+    "To help speed up the investigation and any eligible refund or balance credit, "
+    "please complete your *Know Your Customer (KYC)* verification if you have not already done so.\n\n"
+    "Completing KYC helps us verify account ownership, protect your funds, and process approved refund requests more efficiently.\n\n"
+    "You will be notified once the review has been completed.",
+    parse_mode="Markdown",
+    reply_markup=main_menu,
+)
 
     context.user_data.clear()
 
