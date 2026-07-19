@@ -228,7 +228,7 @@ async def exchange_wallet(
 async def sender_wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.text == "❌ Cancel":
         return await cancel_refund(update, context)
-):
+        
     context.user_data["sender_wallet"] = update.message.text
     context.user_data["refund_text"] = ""
     context.user_data["refund_photos"] = []
