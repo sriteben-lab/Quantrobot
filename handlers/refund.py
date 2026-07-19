@@ -101,7 +101,16 @@ async def investment_date(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "*Step 2 of 7*\n\n"
-        "👤 Enter your Profile ID.",
+
+        "👤 What is your account Username or User ID associated with your profile?\n\n"
+
+        "Example:\n"
+
+        "Username: JohnDoe\n\n"
+
+        "or\n\n"
+
+        "User ID: 123456789",
         parse_mode="Markdown",
         reply_markup=cancel_keyboard,
     )
@@ -117,7 +126,12 @@ async def profile_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "*Step 3 of 7*\n\n"
-        "💵 Enter the investment amount.",
+
+        "💵 What amount did you invest?\n\n"
+
+        "Example:\n"
+
+        "$250",
         parse_mode="Markdown",
         reply_markup=cancel_keyboard,
     )
@@ -133,7 +147,16 @@ async def investment_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "*Step 4 of 7*\n\n"
-        "🪙 Which cryptocurrency did you use?",
+
+        "🪙 Which cryptocurrency/network was used for the deposit?\n\n"
+
+        "Examples:\n\n"
+
+        "• BTC\n"
+        "• ETH\n"
+        "• USDT (TRC20)\n"
+        "• USDT (ERC20)\n"
+        "• USDC (ERC20)",
         parse_mode="Markdown",
         reply_markup=cancel_keyboard,
     )
@@ -149,7 +172,18 @@ async def cryptocurrency(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "*Step 5 of 7*\n\n"
-        "🏦 Which exchange or wallet did you send from?",
+
+        "🏦 Which exchange or wallet did you use to send the funds?\n\n"
+
+        "Examples:\n\n"
+
+        "• Binance\n"
+        "• Trust Wallet\n"
+        "• Coinbase\n"
+        "• Bybit\n"
+        "• OKX\n"
+        "• MetaMask\n"
+        "• Klever Wallet",
         parse_mode="Markdown",
         reply_markup=cancel_keyboard,
     )
@@ -165,7 +199,10 @@ async def exchange_wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "*Step 6 of 7*\n\n"
-        "📤 Paste the wallet address you sent the funds from.",
+
+        "📤 What wallet address did you send the funds from?\n\n"
+
+        "Please paste the complete sending wallet address.",
         parse_mode="Markdown",
         reply_markup=cancel_keyboard,
     )
@@ -183,13 +220,35 @@ async def sender_wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "*Step 7 of 7*\n\n"
-        "📎 Upload your evidence.\n\n"
-        "You can send:\n"
-        "• TXID\n"
-        "• Deposit receipt\n"
+
+        "📎 Provide your transaction evidence.\n\n"
+
+        "Please upload:\n\n"
+
+        "• Transaction Hash (TXID)\n"
+        "• Deposit Receipt\n"
         "• Screenshot(s)\n"
         "• Photo(s)\n\n"
-        "When finished, press ✅ Done.",
+
+        "If you have multiple transactions, label them clearly.\n\n"
+
+        "Example:\n\n"
+
+        "Transaction 1\n\n"
+
+        "TXID:\n"
+
+        "xxxxxxxxxxxxxxxxxxxxxxxx\n\n"
+
+        "Transaction 2\n\n"
+
+        "TXID:\n"
+
+        "yyyyyyyyyyyyyyyyyyyyyyyy\n\n"
+
+        "📷 You may upload multiple screenshots or photos.\n\n"
+
+        "When you have finished uploading everything, press ✅ Done.",
         parse_mode="Markdown",
         reply_markup=done_keyboard,
     )
