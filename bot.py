@@ -68,19 +68,14 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
     elif text == "📤 Submit KYC":
-        await update.message.reply_text(
-            "📤 KYC submission module is under development."
-        )
+    await update.message.reply_text(
+        "📤 KYC submission module is under development."
+    )
 
-    elif text == "💰 Submit Refund Request":
-        await update.message.reply_text(
-            "💰 Refund request module is under development."
-        )
-
-    elif text == "📊 Check Status":
-        await update.message.reply_text(
-            "📊 Status checker is under development."
-        )
+elif text == "📊 Check Status":
+    await update.message.reply_text(
+        "📊 Status checker is under development."
+    )
 
     elif text == "💬 Chat with Support":
         await update.message.reply_text(
@@ -115,7 +110,7 @@ def main():
 
      
     menu_filter = filters.Regex(
-        r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📤 Submit KYC|💰 Submit Refund Request|📊 Check Status|💬 Chat with Support|ℹ️ Help|🏠 Main Menu)$"
+    r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📤 Submit KYC|📊 Check Status|💬 Chat with Support|ℹ️ Help|🏠 Main Menu)$"
     )
 
     app.add_handler(
