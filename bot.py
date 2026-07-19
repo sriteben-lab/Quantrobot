@@ -48,7 +48,6 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
-async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
     if text == "🏠 Main Menu":
