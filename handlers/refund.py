@@ -317,7 +317,6 @@ async def receive_document(
 async def evidence(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
-):
 
     if update.message.text == "✅ Done":
         return await finish_refund(update, context)
