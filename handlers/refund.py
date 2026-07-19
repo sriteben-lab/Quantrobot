@@ -14,7 +14,11 @@ from telegram.ext import (
 from config import ADMIN_ID
 from database import add_refund
 from keyboards import main_menu
-
+cancel_keyboard = ReplyKeyboardMarkup(
+    [["❌ Cancel"]],
+    resize_keyboard=True,
+    one_time_keyboard=False,
+)
 
 # ==========================================
 # Conversation States
@@ -60,18 +64,19 @@ async def refund_request(
     context.user_data["refund_text"] = ""
 
     await update.message.reply_text(
-        "💰 *Refund Request Form*\n\n"
+    "💰 *Refund Request Form*\n\n"
 
-        "*Step 1 of 7*\n\n"
+    "*Step 1 of 7*\n\n"
 
-        "📅 When did you make the investment?\n\n"
+    "📅 When did you make the investment?\n\n"
 
-        "Example:\n"
+    "Example:\n"
 
-        "15 June 2025",
+    "15 June 2025",
 
-        parse_mode="Markdown",
-    )
+    parse_mode="Markdown",
+    reply_markup=cancel_keyboard,
+)
 
     return DATE
 
@@ -101,6 +106,7 @@ async def investment_date(
         "User ID: 123456789",
 
         parse_mode="Markdown",
+        reply_markup=cancel_keyboard,
     )
 
     return PROFILE
@@ -127,6 +133,7 @@ async def profile_id(
         "$250",
 
         parse_mode="Markdown",
+        reply_markup=cancel_keyboard,
     )
 
     return AMOUNT
@@ -157,6 +164,7 @@ async def investment_amount(
         "• USDC (ERC20)",
 
         parse_mode="Markdown",
+        reply_markup=cancel_keyboard,
     )
 
     return CRYPTO
@@ -188,6 +196,7 @@ async def cryptocurrency(
         "• Klever Wallet",
 
         parse_mode="Markdown",
+        reply_markup=cancel_keyboard,
     )
 
     return WALLET
@@ -212,6 +221,7 @@ async def exchange_wallet(
         "Please paste the complete sending wallet address.",
 
         parse_mode="Markdown",
+        reply_markup=cancel_keyboard,
     )
 
     return ADDRESS
@@ -263,7 +273,11 @@ async def sender_wallet(
         "When you have finished uploading everything, press ✅ Done.",
 
         parse_mode="Markdown",
-        reply_markup=done_keyboard,
+        done_keyboard = ReplyKeyboardMarkup(
+    [
+        ["✅ Done", "❌ Cancel"],
+    ],
+    resize_keyboard=True,
     )
 
     return EVIDENCE
