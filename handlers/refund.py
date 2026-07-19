@@ -504,7 +504,22 @@ async def cancel(
     )
 
     return ConversationHandler.END
+# ==========================
+# CANCEL REFUND
+# ==========================
 
+async def cancel_refund(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
+    context.user_data.clear()
+
+    await update.message.reply_text(
+        "❌ Refund request cancelled.",
+        reply_markup=main_menu(),
+    )
+
+    return ConversationHandler.END
 
 # ==========================================
 # CONVERSATION HANDLER
@@ -550,8 +565,8 @@ refund_handler = ConversationHandler(
     },
 
     fallbacks=[
-        MessageHandler(filters.Regex("^✅ Done$"), finish_refund),
-        MessageHandler(filters.Regex("^❌ Cancel$"), cancel_refund),
-        CommandHandler("cancel", cancel_refund),
-    ],
-        )
+    MessageHandler(
+        filters.Regex("^❌ Cancel$"),
+        cancel_refund,
+    ),
+],
