@@ -121,7 +121,7 @@ async def country(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Notify admin
     try:
         await context.bot.send_message(
-            chat_id=ADMIN_CHAT_ID,
+            chat_id=ADMIN_ID,
             text=(
                 "🆕 *NEW USER REGISTRATION*\n\n"
                 f"👤 *Full Name:* {full_name}\n"
