@@ -351,31 +351,58 @@ async def finish_refund(
 
     data = context.user_data
 
+    # Save refund to database
     add_refund(
-    user_id=update.effective_user.id,
-    full_name=update.effective_user.full_name,
-    investment_date=data.get("investment_date", ""),
-    profile_id=data.get("profile_id", ""),
-    investment_amount=data.get("investment_amount", ""),
-    cryptocurrency=data.get("cryptocurrency", ""),
-    exchange_wallet=data.get("exchange_wallet", ""),
-    sender_wallet=data.get("sender_wallet", ""),
-    evidence_text=data.get("refund_text", ""),
-    evidence_file_ids="|".join(
-        data.get("refund_photos", [])
-    ),
-)
+        user_id=update.effective_user.id,
+        full_name=update.effective_user.full_name,
+        investment_date=data.get("investment_date", ""),
+        profile_id=data.get("profile_id", ""),
+        investment_amount=data.get("investment_amount", ""),
+        cryptocurrency=data.get("cryptocurrency", ""),
+        exchange_wallet=data.get("exchange_wallet", ""),
+        sender_wallet=data.get("sender_wallet", ""),
+        evidence_text=data.get("refund_text", ""),
+        evidence_file_ids="|".join(
+            data.get("refund_photos", [])
+        ),
+    )
 
+    # Notify admin
+    await context.bot.send_message(
+        chat_id=ADMIN_ID,
+        text=(
+            "💰 *NEW REFUND REQUEST*\n\n"
+            f"👤 Name: {update.effective_user.full_name}\n"
+            f"🆔 User ID: {update.effective_user.id}\n\n"
+            f"📅 Investment Date: {data.get('investment_date', '')}\n"
+            f"🪪 Profile ID: {data.get('profile_id', '')}\n"
+            f"💵 Amount: {data.get('investment_amount', '')}\n"
+            f"🪙 Cryptocurrency: {data.get('cryptocurrency', '')}\n"
+            f"🏦 Exchange Wallet: {data.get('exchange_wallet', '')}\n"
+            f"📤 Sender Wallet: {data.get('sender_wallet', '')}\n\n"
+            f"📝 Evidence:\n{data.get('refund_text', '')}"
+        ),
+        parse_mode="Markdown",
+    )
+
+    # Send uploaded photos to admin
+    for photo in data.get("refund_photos", []):
+        await context.bot.send_photo(
+            chat_id=ADMIN_ID,
+            photo=photo,
+        )
+
+    # Confirm to user
     await update.message.reply_text(
-    "✅ *Your refund request has been submitted successfully.*\n\n"
-    "Your request has been forwarded to our *Refund Review Team*.\n\n"
-    "To help speed up the investigation and any eligible refund or balance credit, "
-    "please complete your *Know Your Customer (KYC)* verification if you have not already done so.\n\n"
-    "Completing KYC helps us verify account ownership, protect your funds, and process approved refund requests more efficiently.\n\n"
-    "You will be notified once the review has been completed.",
-    parse_mode="Markdown",
-    reply_markup=main_menu,
-)
+        "✅ *Your refund request has been submitted successfully.*\n\n"
+        "Your request has been forwarded to our *Refund Review Team*.\n\n"
+        "To help speed up the investigation and any eligible refund or balance credit, "
+        "please complete your *Know Your Customer (KYC)* verification if you have not already done so.\n\n"
+        "Completing KYC helps us verify account ownership, protect your funds, and process approved refund requests more efficiently.\n\n"
+        "You will be notified once the review has been completed.",
+        parse_mode="Markdown",
+        reply_markup=main_menu,
+    )
 
     context.user_data.clear()
 
