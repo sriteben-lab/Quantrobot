@@ -29,6 +29,12 @@ from handlers.kyc import (
     kyc_status,
 )
 
+from handlers.kyc_admin import (
+    approve_kyc_handler,
+    reject_kyc_handler,
+)
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if context.args:
@@ -108,6 +114,8 @@ def main():
     app.add_handler(help_handler)
     app.add_handler(referral_handler)
     app.add_handler(kyc_handler)
+    app.add_handler(approve_kyc_handler)
+    app.add_handler(reject_kyc_handler)
     app.add_handler(refund_handler)
 
      
