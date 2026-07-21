@@ -564,13 +564,14 @@ def get_kyc_status(user_id):
 
     return "Not Submitted"
 
-def update_kyc_status(
-    user_id,
-    status,
-):
+def update_kyc_status(user_id, status):
 
     conn = get_connection()
     cursor = conn.cursor()
+
+    print("Updating KYC")
+    print("User ID:", user_id)
+    print("Status:", status)
 
     cursor.execute(
         """
@@ -578,11 +579,10 @@ def update_kyc_status(
         SET status=?
         WHERE user_id=?
         """,
-        (
-            status,
-            user_id,
-        ),
+        (status, user_id),
     )
+
+    print("KYC rows updated:", cursor.rowcount)
 
     cursor.execute(
         """
@@ -590,12 +590,10 @@ def update_kyc_status(
         SET kyc_status=?
         WHERE user_id=?
         """,
-        (
-            status,
-            user_id,
-        ),
+        (status, user_id),
     )
+
+    print("Users rows updated:", cursor.rowcount)
 
     conn.commit()
     conn.close()
-    
