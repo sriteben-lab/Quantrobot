@@ -218,10 +218,10 @@ async def finish_kyc(
 
     # Save into database
     submit_kyc(
-        user_id=update.effective_user.id,
-        full_name=data["full_name"],
-        id_document=data["id_document"],
-        selfie_document=data["selfie_document"],
+        update.effective_user.id,
+        data["full_name"],
+        data["id_document"],
+        data["selfie_document"],
     )
 
     # Notify Admin
