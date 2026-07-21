@@ -24,6 +24,10 @@ from handlers.help import help_handler
 from handlers.referrals import referral_handler
 from handlers.refund import refund_handler
 
+from handlers.kyc import (
+    kyc_handler,
+    kyc_status,
+)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
@@ -67,9 +71,8 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "🪪 KYC Status module is under development."
         )
 
-    elif text == "📤 Submit KYC":
-        await update.message.reply_text(
-            "📤 KYC submission module is under development."
+    elif text == "🪪 KYC Status":
+    await kyc_status(update, context)
         )
 
     elif text == "📊 Check Status":
@@ -106,6 +109,7 @@ def main():
     app.add_handler(reply_handler)
     app.add_handler(help_handler)
     app.add_handler(referral_handler)
+    app.add_handler(kyc_handler)
     app.add_handler(refund_handler)
 
      
