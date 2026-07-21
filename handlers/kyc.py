@@ -217,7 +217,7 @@ async def finish_kyc(
     data = context.user_data
 
     # Save into database
-    add_kyc(
+    submit_kyc(
         user_id=update.effective_user.id,
         full_name=data["full_name"],
         id_document=data["id_document"],
