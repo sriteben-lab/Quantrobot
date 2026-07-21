@@ -374,12 +374,11 @@ def get_user_deposits(user_id):
 
     return deposits
 
-
 # =====================================
 # REFUND FUNCTIONS
 # =====================================
 
-def add_refund_request(
+def add_refund(
     user_id,
     full_name,
     investment_date,
@@ -395,34 +394,61 @@ def add_refund_request(
     conn = get_connection()
     cursor = conn.cursor()
 
+    cursor.execute("""
+    INSERT INTO refunds(
+        user_id,
+        full_name,
+        investment_date,
+        profile_id,
+        investment_amount,
+        cryptocurrency,
+        exchange_wallet,
+        sender_wallet,
+        evidence_text,
+        evidence_file_ids
+    )
+    VALUES(?,?,?,?,?,?,?,?,?,?)
+    """, (
+        user_id,
+        full_name,
+        investment_date,
+        profile_id,
+        investment_amount,
+        cryptocurrency,
+        exchange_wallet,
+        sender_wallet,
+        evidence_text,
+        evidence_file_ids,
+    ))
+
+    conn.commit()
+    conn.close()
+
+
+def get_pending_refunds():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
     cursor.execute(
-        """
-        INSERT INTO refunds(
-            user_id,
-            full_name,
-            investment_date,
-            profile_id,
-            investment_amount,
-            cryptocurrency,
-            exchange_wallet,
-            sender_wallet,
-            evidence_text,
-            evidence_file_ids
-        )
-        VALUES(?,?,?,?,?,?,?,?,?,?)
-        """,
-        (
-            user_id,
-            full_name,
-            investment_date,
-            profile_id,
-            investment_amount,
-            cryptocurrency,
-            exchange_wallet,
-            sender_wallet,
-            evidence_text,
-            evidence_file_ids,
-        ),
+        "SELECT * FROM refunds WHERE status='Pending'"
+    )
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows
+
+
+def update_refund_status(refund_id, status):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE refunds SET status=? WHERE id=?",
+        (status, refund_id),
     )
 
     conn.commit()
@@ -435,20 +461,15 @@ def get_user_refunds(user_id):
     cursor = conn.cursor()
 
     cursor.execute(
-        """
-        SELECT *
-        FROM refunds
-        WHERE user_id=?
-        ORDER BY id DESC
-        """,
+        "SELECT * FROM refunds WHERE user_id=? ORDER BY id DESC",
         (user_id,),
     )
 
-    refunds = cursor.fetchall()
+    rows = cursor.fetchall()
 
     conn.close()
 
-    return refunds
+    return rows
 
 # =====================================
 # KYC FUNCTIONS
