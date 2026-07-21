@@ -541,6 +541,28 @@ def get_kyc(user_id):
 
     return kyc
 
+def get_kyc_status(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT kyc_status
+        FROM users
+        WHERE user_id=?
+        """,
+        (user_id,),
+    )
+
+    result = cursor.fetchone()
+
+    conn.close()
+
+    if result:
+        return result[0]
+
+    return "Not Submitted"
 
 def update_kyc_status(
     user_id,
