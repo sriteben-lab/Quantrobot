@@ -236,10 +236,10 @@ async def finish_kyc(
     )
 
     # Send ID Document
-    await context.bot.send_document(
-        chat_id=ADMIN_ID,
-        document=data["id_document"],
-        caption="📄 Identity Document",
+    await context.bot.send_photo(
+    chat_id=ADMIN_ID,
+    photo=data["id_document"],
+    caption="📄 Identity Document",
     )
 
     # Send Selfie
