@@ -569,10 +569,6 @@ def update_kyc_status(user_id, status):
     conn = get_connection()
     cursor = conn.cursor()
 
-    print("Updating KYC")
-    print("User ID:", user_id)
-    print("Status:", status)
-
     cursor.execute(
         """
         UPDATE kyc
@@ -582,8 +578,6 @@ def update_kyc_status(user_id, status):
         (status, user_id),
     )
 
-    print("KYC rows updated:", cursor.rowcount)
-
     cursor.execute(
         """
         UPDATE users
@@ -592,8 +586,6 @@ def update_kyc_status(user_id, status):
         """,
         (status, user_id),
     )
-
-    print("Users rows updated:", cursor.rowcount)
 
     conn.commit()
     conn.close()
