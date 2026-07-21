@@ -38,7 +38,7 @@ from keyboards import main_menu
 # KEYBOARDS
 # ==========================================
 
-cancel_keyboard = ReplyKeyboardMarkup(
+cancel_menu = ReplyKeyboardMarkup(
     [["❌ Cancel"]],
     resize_keyboard=True,
     one_time_keyboard=False,
@@ -87,7 +87,7 @@ async def refund_request(
         "Example:\n"
         "15 June 2025",
         parse_mode="Markdown",
-        reply_markup=cancel_keyboard,
+        reply_markup=cancel_menu,
     )
 
     return DATE
@@ -112,7 +112,7 @@ async def investment_date(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         "User ID: 123456789",
         parse_mode="Markdown",
-        reply_markup=cancel_keyboard,
+        reply_markup=cancel_menu,
     )
 
     return PROFILE
@@ -133,7 +133,7 @@ async def profile_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         "$250",
         parse_mode="Markdown",
-        reply_markup=cancel_keyboard,
+        reply_markup=cancel_menu,
     )
 
     return AMOUNT
@@ -158,7 +158,7 @@ async def investment_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• USDT (ERC20)\n"
         "• USDC (ERC20)",
         parse_mode="Markdown",
-        reply_markup=cancel_keyboard,
+        reply_markup=cancel_menu,
     )
 
     return CRYPTO
@@ -185,7 +185,7 @@ async def cryptocurrency(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• MetaMask\n"
         "• Klever Wallet",
         parse_mode="Markdown",
-        reply_markup=cancel_keyboard,
+        reply_markup=cancel_menu,
     )
 
     return WALLET
@@ -204,7 +204,7 @@ async def exchange_wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         "Please paste the complete sending wallet address.",
         parse_mode="Markdown",
-        reply_markup=cancel_keyboard,
+        reply_markup=cancel_menu,
     )
 
     return ADDRESS
