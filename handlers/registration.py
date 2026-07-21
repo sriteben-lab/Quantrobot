@@ -11,9 +11,10 @@ from config import ADMIN_ID
 
 from database import (
     add_user,
-    user_exists,
-    set_referrer,
     get_referrer,
+    set_referrer,
+    increment_referrals,
+    add_referral_bonus,
 )
 
 from keyboards import main_menu
@@ -108,15 +109,22 @@ async def country(update: Update, context: ContextTypes.DEFAULT_TYPE):
         country,
     )
 
-    # Save referral
-    referrer_id = context.user_data.get("referrer_id")
+    # Handle referral
+    if "referrer_id" in context.user_data:
 
-    if (
-        referrer_id
-        and referrer_id != user_id
-        and get_referrer(user_id) is None
-    ):
-        set_referrer(user_id, referrer_id)
+        referrer_id = context.user_data["referrer_id"]
+
+        # Prevent self-referral
+        if referrer_id != user_id:
+
+            # Only assign a referrer once
+            if get_referrer(user_id) is None:
+
+                set_referrer(user_id, referrer_id)
+                increment_referrals(referrer_id)
+
+                # Optional signup bonus
+                # add_referral_bonus(referrer_id, 10)
 
     # Notify admin
     try:
