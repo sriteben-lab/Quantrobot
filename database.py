@@ -244,6 +244,80 @@ def update_wallet_balance(
     conn.close()
     
 # =====================================
+# REFERRAL FUNCTIONS
+# =====================================
+
+def set_referrer(user_id, referrer_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE users
+        SET referrer_id = ?
+        WHERE user_id = ?
+        """,
+        (referrer_id, user_id),
+    )
+
+    conn.commit()
+    conn.close()
+
+
+def get_referrer(user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT referrer_id
+        FROM users
+        WHERE user_id = ?
+        """,
+        (user_id,),
+    )
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    return row[0] if row else None
+
+
+def add_referral_bonus(user_id, amount):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE users
+        SET affiliate_balance = affiliate_balance + ?
+        WHERE user_id = ?
+        """,
+        (amount, user_id),
+    )
+
+    conn.commit()
+    conn.close()
+
+
+def increment_referrals(user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE users
+        SET referrals = referrals + 1
+        WHERE user_id = ?
+        """,
+        (user_id,),
+    )
+
+    conn.commit()
+    conn.close()
+    
+# =====================================
 # DEPOSIT FUNCTIONS
 # =====================================
 
