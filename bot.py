@@ -77,9 +77,6 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "👥 Referral module is under development."
         )
 
-    elif text == "🪪 KYC Status":
-        await kyc_status(update, context)
-
     elif text == "📊 Check Status":
         await update.message.reply_text(
             "📊 Status checker is under development."
@@ -120,7 +117,7 @@ def main():
 
      
     menu_filter = filters.Regex(
-    r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📤 Submit KYC|📊 Check Status|💬 Chat with Support|ℹ️ Help|🏠 Main Menu)$"
+    r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📊 Check Status|💬 Chat with Support|ℹ️ Help|🏠 Main Menu)$"
     )
 
     app.add_handler(
