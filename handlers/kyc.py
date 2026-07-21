@@ -226,7 +226,7 @@ async def finish_kyc(
 
     # Notify Admin
     await context.bot.send_message(
-        chat_id=ADMIN_CHAT_ID,
+        chat_id=ADMIN_ID,
         text=(
             "🪪 *NEW KYC SUBMISSION*\n\n"
             f"👤 Name: {data['full_name']}\n"
@@ -237,14 +237,14 @@ async def finish_kyc(
 
     # Send ID Document
     await context.bot.send_document(
-        chat_id=ADMIN_CHAT_ID,
+        chat_id=ADMIN_ID,
         document=data["id_document"],
         caption="📄 Identity Document",
     )
 
     # Send Selfie
     await context.bot.send_photo(
-        chat_id=ADMIN_CHAT_ID,
+        chat_id=ADMIN_ID,
         photo=data["selfie_document"],
         caption="🤳 Selfie Holding Identity Document",
     )
