@@ -11,6 +11,7 @@ from config import ADMIN_ID
 
 from database import (
     add_user,
+    user_exists,
     get_referrer,
     set_referrer,
     increment_referrals,
