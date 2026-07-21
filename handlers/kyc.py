@@ -36,7 +36,7 @@ SELFIE = 2
 # KEYBOARDS
 # ==========================================
 
-cancel_keyboard = ReplyKeyboardMarkup(
+cancel_menu = ReplyKeyboardMarkup(
     [
         ["❌ Cancel"],
     ],
@@ -89,7 +89,7 @@ async def submit_kyc(
         "• Your government-issued identity document\n\n"
         "The names must match exactly.",
         parse_mode="Markdown",
-        reply_markup=cancel_keyboard,
+        reply_markup=cancel_menu,
     )
     return FULL_NAME
 
