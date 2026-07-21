@@ -114,9 +114,7 @@ CREATE TABLE IF NOT EXISTS kyc(
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 """)
-    conn.commit()
-    conn.close()
-
+    
 # =====================================
 # USER FUNCTIONS
 # =====================================
