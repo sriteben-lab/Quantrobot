@@ -26,7 +26,8 @@ def create_tables():
         kyc_status TEXT DEFAULT 'Not Submitted',
         wallet_balance REAL DEFAULT 0.0,
         affiliate_balance REAL DEFAULT 0.0,
-        referrals INTEGER DEFAULT 0
+        referrals INTEGER DEFAULT 0,
+        referrer_id INTEGER
     )
     """)
 
