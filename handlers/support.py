@@ -12,7 +12,7 @@ from keyboards import main_menu
 
 MESSAGE = 0
 
-cancel_keyboard = ReplyKeyboardMarkup(
+cancel_menu = ReplyKeyboardMarkup(
     [
         ["🏠 Main Menu"]
     ],
