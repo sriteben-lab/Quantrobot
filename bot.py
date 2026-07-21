@@ -77,7 +77,7 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         
     elif text == "🪪 KYC Status":
-    await update.message.reply_text("KYC button works!")
+        await update.message.reply_text("KYC button works!")
     return
         
         
