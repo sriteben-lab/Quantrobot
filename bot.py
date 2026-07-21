@@ -75,12 +75,10 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "👥 Referral module is under development."
         )
-        
+
     elif text == "🪪 KYC Status":
-        await update.message.reply_text("KYC button works!")
-    return
-        
-        
+        await kyc_status(update, context)
+
     elif text == "📊 Check Status":
         await update.message.reply_text(
             "📊 Status checker is under development."
