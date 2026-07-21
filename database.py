@@ -68,53 +68,40 @@ def create_tables():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS refunds(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-
         user_id INTEGER,
-
         full_name TEXT,
-
         investment_date TEXT,
-
         profile_id TEXT,
-
         investment_amount TEXT,
-
         cryptocurrency TEXT,
-
         exchange_wallet TEXT,
-
         sender_wallet TEXT,
-
         evidence_text TEXT,
-
         evidence_file_ids TEXT,
-
         status TEXT DEFAULT 'Pending'
     )
     """)
 
-# =====================================
-# KYC TABLE
-# =====================================
+    # =====================================
+    # KYC TABLE
+    # =====================================
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS kyc(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS kyc(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER UNIQUE,
+        full_name TEXT,
+        id_document TEXT,
+        selfie_document TEXT,
+        status TEXT DEFAULT 'Pending',
+        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
 
-    user_id INTEGER UNIQUE,
+    conn.commit()
+    conn.close()
 
-    full_name TEXT,
 
-    id_document TEXT,
-
-    selfie_document TEXT,
-
-    status TEXT DEFAULT 'Pending',
-
-    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
-""")
-    
 # =====================================
 # USER FUNCTIONS
 # =====================================
@@ -183,60 +170,113 @@ def get_user(user_id):
     conn.close()
 
     return user
-  # =====================================
-# DEPOSIT FUNCTIONS
-# =====================================
 
-def add_deposit(user_id, network, usd_amount, crypto_amount, txid):
+
+def update_wallet_address(
+    user_id,
+    wallet_address,
+):
 
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-    INSERT INTO deposits(
-        user_id,
-        network,
-        amount,
-        crypto_amount,
-        txid
+    cursor.execute(
+        """
+        UPDATE users
+        SET wallet_address=?
+        WHERE user_id=?
+        """,
+        (
+            wallet_address,
+            user_id,
+        ),
     )
-    VALUES(?,?,?,?,?)
-    """, (
-        user_id,
-        network,
-        usd_amount,
-        crypto_amount,
-        txid,
-    ))
 
     conn.commit()
     conn.close()
 
 
-def get_pending_deposits():
+def update_kyc_status(
+    user_id,
+    status,
+):
 
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-    SELECT
-        id,
-        user_id,
-        network,
-        amount,
-        crypto_amount,
-        txid,
-        status
-    FROM deposits
-    WHERE status='Pending'
-    ORDER BY id DESC
-    """)
+    cursor.execute(
+        """
+        UPDATE users
+        SET kyc_status=?
+        WHERE user_id=?
+        """,
+        (
+            status,
+            user_id,
+        ),
+    )
 
-    deposits = cursor.fetchall()
-
+    conn.commit()
     conn.close()
 
-    return deposits
+
+def update_wallet_balance(
+    user_id,
+    amount,
+):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE users
+        SET wallet_balance=wallet_balance+?
+        WHERE user_id=?
+        """,
+        (
+            amount,
+            user_id,
+        ),
+    )
+
+    conn.commit()
+    conn.close()
+    
+# =====================================
+# DEPOSIT FUNCTIONS
+# =====================================
+
+def add_deposit(
+    user_id,
+    amount,
+    tx_hash,
+    status="Pending",
+):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO deposits(
+            user_id,
+            amount,
+            tx_hash,
+            status
+        )
+        VALUES(?,?,?,?)
+        """,
+        (
+            user_id,
+            amount,
+            tx_hash,
+            status,
+        ),
+    )
+
+    conn.commit()
+    conn.close()
 
 
 def get_user_deposits(user_id):
@@ -244,17 +284,15 @@ def get_user_deposits(user_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-    SELECT
-        network,
-        amount,
-        crypto_amount,
-        txid,
-        status
-    FROM deposits
-    WHERE user_id=?
-    ORDER BY id DESC
-    """, (user_id,))
+    cursor.execute(
+        """
+        SELECT *
+        FROM deposits
+        WHERE user_id=?
+        ORDER BY id DESC
+        """,
+        (user_id,),
+    )
 
     deposits = cursor.fetchall()
 
@@ -262,11 +300,12 @@ def get_user_deposits(user_id):
 
     return deposits
 
+
 # =====================================
 # REFUND FUNCTIONS
 # =====================================
 
-def add_refund(
+def add_refund_request(
     user_id,
     full_name,
     investment_date,
@@ -282,54 +321,38 @@ def add_refund(
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-    INSERT INTO refunds(
-        user_id,
-        full_name,
-        investment_date,
-        profile_id,
-        investment_amount,
-        cryptocurrency,
-        exchange_wallet,
-        sender_wallet,
-        evidence_text,
-        evidence_file_ids
+    cursor.execute(
+        """
+        INSERT INTO refunds(
+            user_id,
+            full_name,
+            investment_date,
+            profile_id,
+            investment_amount,
+            cryptocurrency,
+            exchange_wallet,
+            sender_wallet,
+            evidence_text,
+            evidence_file_ids
+        )
+        VALUES(?,?,?,?,?,?,?,?,?,?)
+        """,
+        (
+            user_id,
+            full_name,
+            investment_date,
+            profile_id,
+            investment_amount,
+            cryptocurrency,
+            exchange_wallet,
+            sender_wallet,
+            evidence_text,
+            evidence_file_ids,
+        ),
     )
-    VALUES(?,?,?,?,?,?,?,?,?,?)
-    """, (
-        user_id,
-        full_name,
-        investment_date,
-        profile_id,
-        investment_amount,
-        cryptocurrency,
-        exchange_wallet,
-        sender_wallet,
-        evidence_text,
-        evidence_file_ids,
-    ))
 
     conn.commit()
     conn.close()
-
-
-def get_pending_refunds():
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    SELECT *
-    FROM refunds
-    WHERE status='Pending'
-    ORDER BY id DESC
-    """)
-
-    refunds = cursor.fetchall()
-
-    conn.close()
-
-    return refunds
 
 
 def get_user_refunds(user_id):
@@ -337,16 +360,15 @@ def get_user_refunds(user_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-    SELECT
-        investment_date,
-        investment_amount,
-        cryptocurrency,
-        status
-    FROM refunds
-    WHERE user_id=?
-    ORDER BY id DESC
-    """, (user_id,))
+    cursor.execute(
+        """
+        SELECT *
+        FROM refunds
+        WHERE user_id=?
+        ORDER BY id DESC
+        """,
+        (user_id,),
+    )
 
     refunds = cursor.fetchall()
 
@@ -354,156 +376,11 @@ def get_user_refunds(user_id):
 
     return refunds
 
-
-def get_refund(refund_id):
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    SELECT *
-    FROM refunds
-    WHERE id=?
-    """, (refund_id,))
-
-    refund = cursor.fetchone()
-
-    conn.close()
-
-    return refund
-
-
-def update_refund_status(refund_id, status):
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    UPDATE refunds
-    SET status=?
-    WHERE id=?
-    """, (
-        status,
-        refund_id,
-    ))
-
-    conn.commit()
-    conn.close()
-  
-# =====================================
-# REFERRAL FUNCTIONS
-# =====================================
-
-def set_referrer(user_id, referrer_id):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    UPDATE users
-    SET referrer_id=?
-    WHERE user_id=?
-    """, (
-        referrer_id,
-        user_id,
-    ))
-
-    conn.commit()
-    conn.close()
-
-
-def get_referrer(user_id):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    SELECT referrer_id
-    FROM users
-    WHERE user_id=?
-    """, (user_id,))
-
-    row = cursor.fetchone()
-
-    conn.close()
-
-    return row[0] if row else None
-
-
-def increment_referrals(user_id):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    UPDATE users
-    SET referrals = referrals + 1
-    WHERE user_id=?
-    """, (user_id,))
-
-    conn.commit()
-    conn.close()
-
-
-def add_affiliate_balance(user_id, amount):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    UPDATE users
-    SET affiliate_balance = affiliate_balance + ?
-    WHERE user_id=?
-    """, (
-        amount,
-        user_id,
-    ))
-
-    conn.commit()
-    conn.close()
-
-
-# =====================================
-# WALLET FUNCTIONS
-# =====================================
-
-def get_wallet_balance(user_id):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    SELECT wallet_balance
-    FROM users
-    WHERE user_id=?
-    """, (user_id,))
-
-    row = cursor.fetchone()
-
-    conn.close()
-
-    if row:
-        return row[0]
-
-    return 0.0
-
-
-def update_wallet_balance(user_id, amount):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    UPDATE users
-    SET wallet_balance=?
-    WHERE user_id=?
-    """, (
-        amount,
-        user_id,
-    ))
-
-    conn.commit()
-    conn.close()
-
 # =====================================
 # KYC FUNCTIONS
 # =====================================
 
-def add_kyc(
+def submit_kyc(
     user_id,
     full_name,
     id_document,
@@ -513,69 +390,61 @@ def add_kyc(
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-    INSERT OR REPLACE INTO kyc(
-        user_id,
-        full_name,
-        id_document,
-        selfie_document,
-        status
+    cursor.execute(
+        """
+        INSERT OR REPLACE INTO kyc(
+            user_id,
+            full_name,
+            id_document,
+            selfie_document,
+            status
+        )
+        VALUES(?,?,?,?,?)
+        """,
+        (
+            user_id,
+            full_name,
+            id_document,
+            selfie_document,
+            "Pending",
+        ),
     )
-    VALUES(?,?,?,?,?)
-    """, (
-        user_id,
-        full_name,
-        id_document,
-        selfie_document,
-        "Pending",
-    ))
 
-    # Also update user's KYC status
-    cursor.execute("""
-    UPDATE users
-    SET kyc_status='Pending'
-    WHERE user_id=?
-    """, (user_id,))
+    cursor.execute(
+        """
+        UPDATE users
+        SET kyc_status=?
+        WHERE user_id=?
+        """,
+        (
+            "Pending",
+            user_id,
+        ),
+    )
 
     conn.commit()
     conn.close()
 
 
-def get_user_kyc(user_id):
+def get_kyc(user_id):
 
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-    SELECT *
-    FROM kyc
-    WHERE user_id=?
-    """, (user_id,))
+    cursor.execute(
+        """
+        SELECT *
+        FROM kyc
+        WHERE user_id=?
+        """,
+        (user_id,),
+    )
 
-    row = cursor.fetchone()
-
-    conn.close()
-
-    return row
-
-
-def get_pending_kyc():
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    SELECT *
-    FROM kyc
-    WHERE status='Pending'
-    ORDER BY id DESC
-    """)
-
-    rows = cursor.fetchall()
+    kyc = cursor.fetchone()
 
     conn.close()
 
-    return rows
+    return kyc
 
 
 def update_kyc_status(
@@ -586,62 +455,30 @@ def update_kyc_status(
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-    UPDATE kyc
-    SET status=?
-    WHERE user_id=?
-    """, (
-        status,
-        user_id,
-    ))
+    cursor.execute(
+        """
+        UPDATE kyc
+        SET status=?
+        WHERE user_id=?
+        """,
+        (
+            status,
+            user_id,
+        ),
+    )
 
-    cursor.execute("""
-    UPDATE users
-    SET kyc_status=?
-    WHERE user_id=?
-    """, (
-        status,
-        user_id,
-    ))
+    cursor.execute(
+        """
+        UPDATE users
+        SET kyc_status=?
+        WHERE user_id=?
+        """,
+        (
+            status,
+            user_id,
+        ),
+    )
 
     conn.commit()
     conn.close()
-
-
-def get_kyc_status(user_id):
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    SELECT kyc_status
-    FROM users
-    WHERE user_id=?
-    """, (user_id,))
-
-    row = cursor.fetchone()
-
-    conn.close()
-
-    if row:
-        return row[0]
-
-    return "Not Submitted"
-
-
-def get_kyc(user_id):
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    SELECT *
-    FROM kyc
-    WHERE user_id=?
-    """, (user_id,))
-
-    row = cursor.fetchone()
-
-    conn.close()
-
-    return row
+    
