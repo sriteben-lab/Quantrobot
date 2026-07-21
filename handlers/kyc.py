@@ -67,7 +67,6 @@ async def submit_kyc(
         "Please wait for our Compliance Team to complete verification.",
         reply_markup=main_menu,
     )
-
     return ConversationHandler.END
 
     if status == "Approved":
@@ -77,7 +76,6 @@ async def submit_kyc(
         "There is no need to submit another verification.",
         reply_markup=main_menu,
     )
-
     return ConversationHandler.END
     
     context.user_data.clear()
@@ -92,7 +90,6 @@ async def submit_kyc(
         parse_mode="Markdown",
         reply_markup=cancel_keyboard,
     )
-
     return FULL_NAME
 
 
