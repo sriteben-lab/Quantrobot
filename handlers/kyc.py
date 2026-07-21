@@ -15,6 +15,7 @@ from config import ADMIN_ID
 from database import (
     submit_kyc as save_kyc,
     get_kyc,
+    get_kyc_status,
     update_kyc_status,
 )
 
@@ -57,6 +58,28 @@ async def submit_kyc(
     context: ContextTypes.DEFAULT_TYPE,
 ):
 
+    status = get_kyc_status(update.effective_user.id)
+
+    if status == "Pending":
+
+        await update.message.reply_text(
+        "🪪 Your KYC is already under review.\n\n"
+        "Please wait for our Compliance Team to complete verification.",
+        reply_markup=main_menu,
+    )
+
+    return ConversationHandler.END
+
+    if status == "Approved":
+
+        await update.message.reply_text(
+        "✅ Your KYC has already been approved.\n\n"
+        "There is no need to submit another verification.",
+        reply_markup=main_menu,
+    )
+
+    return ConversationHandler.END
+    
     context.user_data.clear()
 
     await update.message.reply_text(
