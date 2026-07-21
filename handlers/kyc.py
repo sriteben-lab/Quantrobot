@@ -128,7 +128,7 @@ async def receive_name(
         "• An image document\n"
         "• A PDF document",
         parse_mode="Markdown",
-        reply_markup=cancel_keyboard,
+        reply_markup=cancel_menu,
     )
 
     return ID_DOCUMENT
@@ -184,7 +184,7 @@ async def receive_id_document(
         "• The identity document must be readable.\n"
         "• Do not crop or edit the image.",
         parse_mode="Markdown",
-        reply_markup=cancel_keyboard,
+        reply_markup=cancel_menu,
     )
 
     return SELFIE
