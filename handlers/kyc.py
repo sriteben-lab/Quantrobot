@@ -13,7 +13,7 @@ from telegram.ext import (
 from config import ADMIN_ID
 
 from database import (
-    submit_kyc,
+    submit_kyc as save_kyc,
     get_kyc,
     update_kyc_status,
 )
@@ -217,7 +217,7 @@ async def finish_kyc(
     data = context.user_data
 
     # Save into database
-    submit_kyc(
+    save_kyc(
         update.effective_user.id,
         data["full_name"],
         data["id_document"],
