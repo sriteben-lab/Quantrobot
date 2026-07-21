@@ -10,10 +10,12 @@ from telegram.ext import (
     filters,
 )
 
-from config import ADMIN_CHAT_ID
+from config import ADMIN_ID
 
 from database import (
-    add_kyc,
+    submit_kyc,
+    get_kyc,
+    update_kyc_status,
 )
 
 from keyboards import (
