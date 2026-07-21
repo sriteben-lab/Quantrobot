@@ -93,9 +93,29 @@ def create_tables():
     )
     """)
 
+# =====================================
+# KYC TABLE
+# =====================================
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS kyc(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    user_id INTEGER UNIQUE,
+
+    full_name TEXT,
+
+    id_document TEXT,
+
+    selfie_document TEXT,
+
+    status TEXT DEFAULT 'Pending',
+
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+""")
     conn.commit()
     conn.close()
-
 
 # =====================================
 # USER FUNCTIONS
@@ -480,3 +500,150 @@ def update_wallet_balance(user_id, amount):
 
     conn.commit()
     conn.close()
+
+# =====================================
+# KYC FUNCTIONS
+# =====================================
+
+def add_kyc(
+    user_id,
+    full_name,
+    id_document,
+    selfie_document,
+):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    INSERT OR REPLACE INTO kyc(
+        user_id,
+        full_name,
+        id_document,
+        selfie_document,
+        status
+    )
+    VALUES(?,?,?,?,?)
+    """, (
+        user_id,
+        full_name,
+        id_document,
+        selfie_document,
+        "Pending",
+    ))
+
+    # Also update user's KYC status
+    cursor.execute("""
+    UPDATE users
+    SET kyc_status='Pending'
+    WHERE user_id=?
+    """, (user_id,))
+
+    conn.commit()
+    conn.close()
+
+
+def get_user_kyc(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT *
+    FROM kyc
+    WHERE user_id=?
+    """, (user_id,))
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    return row
+
+
+def get_pending_kyc():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT *
+    FROM kyc
+    WHERE status='Pending'
+    ORDER BY id DESC
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows
+
+
+def update_kyc_status(
+    user_id,
+    status,
+):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    UPDATE kyc
+    SET status=?
+    WHERE user_id=?
+    """, (
+        status,
+        user_id,
+    ))
+
+    cursor.execute("""
+    UPDATE users
+    SET kyc_status=?
+    WHERE user_id=?
+    """, (
+        status,
+        user_id,
+    ))
+
+    conn.commit()
+    conn.close()
+
+
+def get_kyc_status(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT kyc_status
+    FROM users
+    WHERE user_id=?
+    """, (user_id,))
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    if row:
+        return row[0]
+
+    return "Not Submitted"
+
+
+def get_kyc(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT *
+    FROM kyc
+    WHERE user_id=?
+    """, (user_id,))
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    return row
