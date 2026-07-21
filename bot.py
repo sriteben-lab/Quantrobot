@@ -61,14 +61,19 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    if text == "📈 Investment Plans":
+    elif text == "📈 Investment Plans":
         await update.message.reply_text(
             "📈 Investment module is under development."
         )
 
+    elif text == "👥 Referrals":
+        await update.message.reply_text(
+            "👥 Referral module is under development."
+        )
+
     elif text == "🪪 KYC Status":
-    await kyc_status(update, context)
-        
+        await kyc_status(update, context)
+
     elif text == "📊 Check Status":
         await update.message.reply_text(
             "📊 Status checker is under development."
@@ -81,7 +86,6 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     elif text == "ℹ️ Help":
         await help_command(update, context)
-
 
 def main():
     create_tables()
