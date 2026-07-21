@@ -77,7 +77,7 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         
     elif text == "🪪 KYC Status":
-        await kyc_status(update, context)
+    await update.message.reply_text("KYC button works!")
         
         
     elif text == "📊 Check Status":
@@ -118,11 +118,10 @@ def main():
     app.add_handler(reject_kyc_handler)
     app.add_handler(refund_handler)
 
-     
     menu_filter = filters.Regex(
         r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📊 Check Status|💬 Chat with Support|ℹ️ Help|🏠 Main Menu)$"
     )
-
+    
     app.add_handler(
         MessageHandler(
             menu_filter,
