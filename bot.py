@@ -56,7 +56,6 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Use the menu buttons to access the available features."
     )
 
-
 async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
@@ -76,7 +75,11 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "👥 Referral module is under development."
         )
-
+        
+    elif text == "🪪 KYC Status":
+        await kyc_status(update, context)
+        )
+        
     elif text == "📊 Check Status":
         await update.message.reply_text(
             "📊 Status checker is under development."
