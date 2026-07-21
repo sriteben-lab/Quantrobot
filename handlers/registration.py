@@ -101,6 +101,9 @@ async def country(update: Update, context: ContextTypes.DEFAULT_TYPE):
     phone = context.user_data["phone"]
     country = update.message.text
 
+    print("USER DATA:", context.user_data)
+    print("REFERRER:", context.user_data.get("referrer_id"))
+    
     # Save user
     add_user(
         user_id,
