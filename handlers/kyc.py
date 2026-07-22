@@ -55,30 +55,24 @@ done_keyboard = ReplyKeyboardMarkup(
 # ==========================================
 
 async def submit_kyc(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print(">>> submit_kyc called")
-
-    await update.message.reply_text("✅ Submit KYC handler reached")
-
     status = get_kyc_status(update.effective_user.id)
 
     if status == "Pending":
-
         await update.message.reply_text(
-        "🪪 Your KYC is already under review.\n\n"
-        "Please wait for our Compliance Team to complete verification.",
-        reply_markup=main_menu,
-    )
-    return ConversationHandler.END
+            "🪪 Your KYC is already under review.\n\n"
+            "Please wait for our Compliance Team to complete verification.",
+            reply_markup=main_menu,
+        )
+        return ConversationHandler.END
 
     if status == "Approved":
-
         await update.message.reply_text(
-        "✅ Your KYC has already been approved.\n\n"
-        "There is no need to submit another verification.",
-        reply_markup=main_menu,
-    )
-    return ConversationHandler.END
-    
+            "✅ Your KYC has already been approved.\n\n"
+            "There is no need to submit another verification.",
+            reply_markup=main_menu,
+        )
+        return ConversationHandler.END
+
     context.user_data.clear()
 
     await update.message.reply_text(
@@ -91,6 +85,7 @@ async def submit_kyc(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode="Markdown",
         reply_markup=cancel_menu,
     )
+
     return FULL_NAME
 
 
