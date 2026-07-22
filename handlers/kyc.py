@@ -365,7 +365,7 @@ kyc_handler = ConversationHandler(
 
     entry_points=[
         MessageHandler(
-            filters.Regex("^📤 Submit KYC$"),
+            filters.TEXT,
             submit_kyc,
         ),
     ],
