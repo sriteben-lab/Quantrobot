@@ -54,10 +54,10 @@ done_keyboard = ReplyKeyboardMarkup(
 # START KYC
 # ==========================================
 
-async def submit_kyc(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def submit_kyc(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print(">>> submit_kyc called")
+
+    await update.message.reply_text("✅ Submit KYC handler reached")
 
     status = get_kyc_status(update.effective_user.id)
 
