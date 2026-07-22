@@ -348,9 +348,9 @@ async def kyc_status(
         )
 
     await update.message.reply_text(
-        message,
-        parse_mode="Markdown",
-  )
+    message,
+    parse_mode="Markdown",
+)
   
 # ==========================================
 # CONVERSATION HANDLER
