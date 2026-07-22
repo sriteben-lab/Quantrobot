@@ -359,11 +359,11 @@ async def kyc_status(
 kyc_handler = ConversationHandler(
 
     entry_points=[
-        MessageHandler(
-            filters.TEXT,
-            submit_kyc,
-        ),
-    ],
+    MessageHandler(
+        filters.Regex(r"^📤 Submit KYC$"),
+        submit_kyc,
+    ),
+],
 
     states={
 
