@@ -132,28 +132,28 @@ async def pending_deposits(
 
         return
 
-    for deposit in deposits:
+for deposit in deposits:
 
-        deposit_id = deposit[0]
-        user_id = deposit[1]
-        network = deposit[2]
-        amount = deposit[3]
-        crypto_amount = deposit[4]
-        txid = deposit[5]
+    deposit_id = deposit[0]
+    user_id = deposit[1]
+    network = deposit[2]
+    amount = deposit[3]
+    crypto_amount = deposit[4]
+    txid = deposit[5]
 
-        keyboard = InlineKeyboardMarkup(
-            [[
-                InlineKeyboardButton(
-                    "✅ Approve",
-                    callback_data=f"approve_deposit:{deposit_id}",
-                ),
-                InlineKeyboardButton(
-                    "❌ Reject",
-                    callback_data=f"reject_deposit:{deposit_id}",
-                ),
-            ]]
-        )
-       
+    keyboard = InlineKeyboardMarkup(
+        [[
+            InlineKeyboardButton(
+                "✅ Approve",
+                callback_data=f"approve_deposit:{deposit_id}",
+            ),
+            InlineKeyboardButton(
+                "❌ Reject",
+                callback_data=f"reject_deposit:{deposit_id}",
+            ),
+        ]]
+    )
+
     await update.message.reply_text(
         f"📥 *Pending Deposit*\n\n"
         f"👤 User ID: `{user_id}`\n"
@@ -164,8 +164,6 @@ async def pending_deposits(
         parse_mode="Markdown",
         reply_markup=keyboard,
     )
-except Exception as e:
-    print("DEPOSIT ERROR:", e)
 
 admin_panel_handler = MessageHandler(
     filters.Regex("^🛠 Admin Panel$"),
