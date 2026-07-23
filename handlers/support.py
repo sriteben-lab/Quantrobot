@@ -26,7 +26,7 @@ async def support(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Send your message or photo.\n\n"
         "Our support team will reply as soon as possible.",
         parse_mode="Markdown",
-        reply_markup=cancel_keyboard,
+        reply_markup=cancel_menu,
     )
 
     return MESSAGE
