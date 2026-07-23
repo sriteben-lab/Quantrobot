@@ -183,12 +183,41 @@ async def deposit_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     deposit_id = int(deposit_id)
 
     if action == "approve_deposit":
+
         update_deposit_status(deposit_id, "Approved")
-        await query.edit_message_text("✅ Deposit approved.")
+
+        user_id, amount = get_deposit(deposit_id)
+
+        add_wallet_balance(user_id, amount)
+
+        await context.bot.send_message(
+            chat_id=user_id,
+            text=(
+                f"✅ Your deposit of ${amount:,.2f} has been approved.\n\n"
+                "The funds have been added to your wallet."
+            ),
+        )
+
+        await query.edit_message_text(
+            "✅ Deposit Approved"
+        )
 
     elif action == "reject_deposit":
+
         update_deposit_status(deposit_id, "Rejected")
-        await query.edit_message_text("❌ Deposit rejected.")
+
+        user_id, amount = get_deposit(deposit_id)
+
+        await context.bot.send_message(
+            chat_id=user_id,
+            text=(
+                f"❌ Your deposit of ${amount:,.2f} has been rejected."
+            ),
+        )
+
+        await query.edit_message_text(
+            "❌ Deposit Rejected"
+        )
 
 deposit_callback_handler = CallbackQueryHandler(
     deposit_callback,
