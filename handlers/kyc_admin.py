@@ -112,3 +112,50 @@ reject_kyc_handler = CommandHandler(
     "reject_kyc",
     reject_kyc,
 )
+
+# ==========================================
+# INLINE APPROVE / REJECT CALLBACK
+# ==========================================
+
+async def kyc_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    query = update.callback_query
+    await query.answer()
+
+    if update.effective_user.id != ADMIN_ID:
+        return
+
+    action, user_id = query.data.split(":")
+    user_id = int(user_id)
+
+    if action == "approve_kyc":
+
+        update_kyc_status(user_id, "Approved")
+
+        await context.bot.send_message(
+            chat_id=user_id,
+            text="✅ Your KYC has been approved.",
+        )
+
+        await query.edit_message_caption(
+            caption="✅ KYC Approved"
+        )
+
+    elif action == "reject_kyc":
+
+        update_kyc_status(user_id, "Rejected")
+
+        await context.bot.send_message(
+            chat_id=user_id,
+            text="❌ Your KYC was rejected.",
+        )
+
+        await query.edit_message_caption(
+            caption="❌ KYC Rejected"
+        )
+
+
+kyc_callback_handler = CallbackQueryHandler(
+    kyc_callback,
+    pattern="^(approve_kyc|reject_kyc):",
+)
