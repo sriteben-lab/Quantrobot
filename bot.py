@@ -23,6 +23,7 @@ from handlers.support_reply import reply_handler
 from handlers.help import help_handler
 from handlers.referrals import referral_handler
 from handlers.refund import refund_handler
+from handlers.check_status import check_status_handler
 
 from handlers.kyc import (
     kyc_handler,
@@ -80,11 +81,6 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await kyc_status(update, context)
         return
 
-    elif text == "📊 Check Status":
-        await update.message.reply_text(
-            "📊 Status checker is under development."
-        )
-
     elif text == "💬 Chat with Support":
         await update.message.reply_text(
             "💬 Support module is under development."
@@ -117,6 +113,7 @@ def main():
     app.add_handler(approve_kyc_handler)
     app.add_handler(reject_kyc_handler)
     app.add_handler(refund_handler)
+    app.add_handler(check_status_handler)
 
     menu_filter = filters.Regex(
         r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📊 Check Status|💬 Chat with Support|ℹ️ Help|🏠 Main Menu)$"
