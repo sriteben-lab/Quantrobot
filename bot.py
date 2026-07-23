@@ -33,6 +33,7 @@ from handlers.kyc import (
 from handlers.kyc_admin import (
     approve_kyc_handler,
     reject_kyc_handler,
+    kyc_callback_handler,
 )
 
 from handlers.admin_panel import (
