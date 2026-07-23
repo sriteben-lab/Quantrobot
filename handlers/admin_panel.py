@@ -112,58 +112,49 @@ async def pending_kyc(
             caption="🤳 Selfie Holding Identity Document",
         )
 
-async def pending_deposits(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
+async def pending_deposits(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if update.effective_user.id != ADMIN_ID:
         return
 
     deposits = get_pending_deposits()
-    
-    print("PENDING DEPOSITS:", deposits)
-    
+
     if not deposits:
-
-        await update.message.reply_text(
-            "✅ There are no pending deposits."
-        )
-
+        await update.message.reply_text("No pending deposits.")
         return
 
-for deposit in deposits:
+    for deposit in deposits:
 
-    deposit_id = deposit[0]
-    user_id = deposit[1]
-    network = deposit[2]
-    amount = deposit[3]
-    crypto_amount = deposit[4]
-    txid = deposit[5]
+        deposit_id = deposit[0]
+        user_id = deposit[1]
+        network = deposit[2]
+        amount = deposit[3]
+        crypto_amount = deposit[4]
+        txid = deposit[5]
 
-    keyboard = InlineKeyboardMarkup(
-        [[
-            InlineKeyboardButton(
-                "✅ Approve",
-                callback_data=f"approve_deposit:{deposit_id}",
-            ),
-            InlineKeyboardButton(
-                "❌ Reject",
-                callback_data=f"reject_deposit:{deposit_id}",
-            ),
-        ]]
-    )
+        keyboard = InlineKeyboardMarkup([
+            [
+                InlineKeyboardButton(
+                    "✅ Approve",
+                    callback_data=f"approve_deposit:{deposit_id}",
+                ),
+                InlineKeyboardButton(
+                    "❌ Reject",
+                    callback_data=f"reject_deposit:{deposit_id}",
+                ),
+            ]
+        ])
 
-    await update.message.reply_text(
-        f"📥 *Pending Deposit*\n\n"
-        f"👤 User ID: `{user_id}`\n"
-        f"🌐 Network: {network}\n"
-        f"💵 USD: ${amount:,.2f}\n"
-        f"🪙 Crypto: {crypto_amount}\n\n"
-        f"🔗 TXID:\n`{txid}`",
-        parse_mode="Markdown",
-        reply_markup=keyboard,
-    )
+        await update.message.reply_text(
+            f"📥 *Pending Deposit*\n\n"
+            f"👤 User ID: `{user_id}`\n"
+            f"🌐 Network: {network}\n"
+            f"💵 USD: ${amount:,.2f}\n"
+            f"🪙 Crypto: {crypto_amount}\n\n"
+            f"🔗 TXID:\n`{txid}`",
+            parse_mode="Markdown",
+            reply_markup=keyboard,
+        )
 
 admin_panel_handler = MessageHandler(
     filters.Regex("^🛠 Admin Panel$"),
