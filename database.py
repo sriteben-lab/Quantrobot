@@ -439,6 +439,26 @@ def update_deposit_status(deposit_id, status):
     conn.commit()
     conn.close()
 
+def add_wallet_balance(user_id, amount):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE users
+        SET wallet_balance = wallet_balance + ?
+        WHERE user_id = ?
+        """,
+        (
+            amount,
+            user_id,
+        ),
+    )
+
+    conn.commit()
+    conn.close()
+
 def get_latest_deposit_status(user_id):
 
     conn = get_connection()
