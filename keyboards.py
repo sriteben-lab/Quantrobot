@@ -11,7 +11,9 @@ main_menu = ReplyKeyboardMarkup(
         ["📤 Submit KYC", "💰 Submit Refund Request"],
         ["📊 Check Status", "💬 Chat with Support"],
         ["📋 My Profile"],
+        ["🛠 Admin Panel"],
         ["ℹ️ Help"],
+]
     ],
     resize_keyboard=True
 )
