@@ -6,6 +6,7 @@ from telegram.ext import (
 )
 
 from config import ADMIN_ID
+from database import get_support_user
 
 
 async def reply_to_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -19,15 +20,15 @@ async def reply_to_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     replied_message_id = update.message.reply_to_message.message_id
 
-    user_id = context.bot_data.get(replied_message_id)
+    user_id = get_support_user(replied_message_id)
 
     if not user_id:
 
-        await update.message.reply_text(
-            "❌ Unable to identify the user."
-        )
+       await update.message.reply_text(
+        "❌ Unable to identify the user."
+       )
 
-        return
+       return
 
     # ---------- TEXT ----------
     if update.message.text:
