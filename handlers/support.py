@@ -9,6 +9,7 @@ from telegram.ext import (
 
 from config import ADMIN_ID
 from keyboards import main_menu
+from database import save_support_message
 
 MESSAGE = 0
 
@@ -48,6 +49,10 @@ async def receive_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ),
             parse_mode="Markdown",
         )
+        save_support_message(
+            sent.message_id,
+            user.id,
+        )
 
     # ---------- PHOTO ----------
     elif update.message.photo:
@@ -65,6 +70,10 @@ async def receive_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 f"🆔 {user.id}\n\n"
                 f"{caption}"
             ),
+        )
+        save_support_message(
+            sent.message_id,
+            user.id,
         )
 
     else:
