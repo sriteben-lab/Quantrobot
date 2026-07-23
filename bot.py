@@ -36,6 +36,10 @@ from handlers.kyc_admin import (
     reject_kyc_handler,
 )
 
+from handlers.admin_panel import (
+    admin_panel_handler,
+    pending_kyc_handler,
+)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
@@ -116,6 +120,7 @@ def main():
     app.add_handler(refund_handler)
     app.add_handler(check_status_handler)
     app.add_handler(admin_panel_handler)
+    app.add_handler(pending_kyc_handler)
 
     menu_filter = filters.Regex(
         r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📊 Check Status|💬 Chat with Support|ℹ️ Help|🏠 Main Menu|🛠 Admin Panel)$"
