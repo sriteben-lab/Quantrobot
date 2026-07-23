@@ -9,6 +9,7 @@ from telegram.ext import (
 
 from database import add_deposit
 from keyboards import main_menu
+from config import ADMIN_ID
 
 TXID = 0
 
@@ -35,6 +36,19 @@ async def save_tx(update: Update, context: ContextTypes.DEFAULT_TYPE):
         crypto_amount,
         txid
     )
+    await context.bot.send_message(
+    chat_id=ADMIN_ID,
+    text=(
+        "📥 *New Deposit Submitted*\n\n"
+        f"👤 User ID: `{update.effective_user.id}`\n"
+        f"🌐 Network: {network}\n"
+        f"💵 Amount: ${usd_amount:,.2f}\n"
+        f"🪙 Crypto: {crypto_amount:.8f}\n\n"
+        f"🔗 TXID:\n`{txid}`\n\n"
+        "Open *Admin Panel → Pending Deposits* to review."
+    ),
+    parse_mode="Markdown",
+)
 
     await update.message.reply_text(
         f"""✅ *Deposit Submitted Successfully*
