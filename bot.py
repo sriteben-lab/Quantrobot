@@ -117,6 +117,7 @@ def main():
     app.add_handler(kyc_handler)
     app.add_handler(approve_kyc_handler)
     app.add_handler(reject_kyc_handler)
+    app.add_handler(kyc_callback_handler)
     app.add_handler(refund_handler)
     app.add_handler(check_status_handler)
     app.add_handler(admin_panel_handler)
