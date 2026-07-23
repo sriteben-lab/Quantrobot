@@ -13,7 +13,6 @@ main_menu = ReplyKeyboardMarkup(
         ["📋 My Profile"],
         ["🛠 Admin Panel"],
         ["ℹ️ Help"],
-]
     ],
     resize_keyboard=True
 )
