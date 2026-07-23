@@ -121,6 +121,7 @@ async def kyc_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     query = update.callback_query
     await query.answer()
+    print(query.data)
 
     if update.effective_user.id != ADMIN_ID:
         return
