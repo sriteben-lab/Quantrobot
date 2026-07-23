@@ -13,8 +13,11 @@ from telegram.ext import (
 
 from config import ADMIN_ID
 from keyboards import main_menu
-from database import get_pending_kyc
 
+from database import (
+    get_pending_kyc,
+    get_pending_deposits,
+)
 
 admin_menu = ReplyKeyboardMarkup(
     [
