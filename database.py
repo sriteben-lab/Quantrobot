@@ -324,8 +324,10 @@ def increment_referrals(user_id):
 
 def add_deposit(
     user_id,
+    network,
     amount,
-    tx_hash,
+    crypto_amount,
+    txid,
     status="Pending",
 ):
 
@@ -336,23 +338,26 @@ def add_deposit(
         """
         INSERT INTO deposits(
             user_id,
+            network,
             amount,
-            tx_hash,
+            crypto_amount,
+            txid,
             status
         )
-        VALUES(?,?,?,?)
+        VALUES(?,?,?,?,?,?)
         """,
         (
             user_id,
+            network,
             amount,
-            tx_hash,
+            crypto_amount,
+            txid,
             status,
         ),
     )
 
     conn.commit()
     conn.close()
-
 
 def get_user_deposits(user_id):
 
