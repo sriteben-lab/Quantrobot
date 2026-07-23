@@ -154,7 +154,7 @@ async def pending_deposits(
             ]]
         )
         
-    try:
+try:
     await update.message.reply_text(
         f"📥 *Pending Deposit*\n\n"
         f"👤 User ID: `{user_id}`\n"
@@ -165,6 +165,8 @@ async def pending_deposits(
         parse_mode="Markdown",
         reply_markup=keyboard,
     )
+except Exception as e:
+    print("DEPOSIT ERROR:", e)
 except Exception as e:
     print("DEPOSIT ERROR:", e)
 except Exception as e:
