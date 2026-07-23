@@ -404,6 +404,20 @@ def get_pending_deposits():
 
     return rows
 
+def get_deposit(deposit_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT user_id, amount
+        FROM deposits
+        WHERE id=?
+    """, (deposit_id,))
+
+    row = cursor.fetchone()
+
+    conn.close()
+    return row
 
 def update_deposit_status(deposit_id, status):
 
