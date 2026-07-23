@@ -163,6 +163,48 @@ async def pending_deposits(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=keyboard,
         )
 
+async def pending_refunds(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    if update.effective_user.id != ADMIN_ID:
+        return
+
+    refunds = get_pending_refunds()
+
+    if not refunds:
+        await update.message.reply_text("No pending refunds.")
+        return
+
+    for refund in refunds:
+
+        refund_id = refund[0]
+        user_id = refund[1]
+        full_name = refund[2]
+        investment_amount = refund[5]
+        cryptocurrency = refund[6]
+
+        keyboard = InlineKeyboardMarkup([
+            [
+                InlineKeyboardButton(
+                    "✅ Approve",
+                    callback_data=f"approve_refund:{refund_id}",
+                ),
+                InlineKeyboardButton(
+                    "❌ Reject",
+                    callback_data=f"reject_refund:{refund_id}",
+                ),
+            ]
+        ])
+
+        await update.message.reply_text(
+            f"💰 *Pending Refund*\n\n"
+            f"👤 {full_name}\n"
+            f"🆔 User ID: `{user_id}`\n"
+            f"💵 Amount: {investment_amount}\n"
+            f"🪙 Crypto: {cryptocurrency}",
+            parse_mode="Markdown",
+            reply_markup=keyboard,
+        )
+
 admin_panel_handler = MessageHandler(
     filters.Regex("^🛠 Admin Panel$"),
     admin_panel,
@@ -177,6 +219,11 @@ pending_deposits_handler = MessageHandler(
     filters.Regex("^📥 Pending Deposits$"),
     pending_deposits,
         )
+
+pending_refunds_handler = MessageHandler(
+    filters.Regex("^💰 Pending Refunds$"),
+    pending_refunds,
+)
 
 async def deposit_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -226,3 +273,55 @@ deposit_callback_handler = CallbackQueryHandler(
     deposit_callback,
     pattern="^(approve_deposit|reject_deposit):",
         )
+
+async def refund_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    query = update.callback_query
+    await query.answer()
+
+    action, refund_id = query.data.split(":")
+    refund_id = int(refund_id)
+
+    user_id, amount = get_refund(refund_id)
+
+    amount = float(
+        str(amount).replace("$", "").replace(",", "").strip()
+    )
+
+    if action == "approve_refund":
+
+        update_refund_status(refund_id, "Approved")
+
+        add_wallet_balance(user_id, amount)
+
+        await context.bot.send_message(
+            chat_id=user_id,
+            text=(
+                f"✅ Your refund request has been approved.\n\n"
+                f"${amount:,.2f} has been added to your wallet."
+            ),
+        )
+
+        await query.edit_message_text(
+            "✅ Refund Approved"
+        )
+
+    elif action == "reject_refund":
+
+        update_refund_status(refund_id, "Rejected")
+
+        await context.bot.send_message(
+            chat_id=user_id,
+            text=(
+                "❌ Your refund request has been rejected."
+            ),
+        )
+
+        await query.edit_message_text(
+            "❌ Refund Rejected"
+        )
+
+refund_callback_handler = CallbackQueryHandler(
+    refund_callback,
+    pattern="^(approve_refund|reject_refund):",
+)
