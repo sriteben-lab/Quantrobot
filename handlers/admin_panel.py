@@ -153,17 +153,19 @@ async def pending_deposits(
                 ),
             ]]
         )
-
-        await update.message.reply_text(
-            f"📥 *Pending Deposit*\n\n"
-            f"👤 User ID: `{user_id}`\n"
-            f"🌐 Network: {network}\n"
-            f"💵 USD: ${amount:,.2f}\n"
-            f"🪙 Crypto: {crypto_amount}\n\n"
-            f"🔗 TXID:\n`{txid}`",
-            parse_mode="Markdown",
-            reply_markup=keyboard,
-        )
+        
+    await update.message.reply_text(
+        f"📥 *Pending Deposit*\n\n"
+        f"👤 User ID: `{user_id}`\n"
+        f"🌐 Network: {network}\n"
+        f"💵 USD: ${amount:,.2f}\n"
+        f"🪙 Crypto: {crypto_amount}\n\n"
+        f"🔗 TXID:\n`{txid}`",
+        parse_mode="Markdown",
+        reply_markup=keyboard,
+    )
+except Exception as e:
+    print("DEPOSIT ERROR:", e)
 
 admin_panel_handler = MessageHandler(
     filters.Regex("^🛠 Admin Panel$"),
