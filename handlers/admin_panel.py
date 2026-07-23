@@ -8,6 +8,7 @@ from telegram import (
 from telegram.ext import (
     ContextTypes,
     MessageHandler,
+    CallbackQueryHandler,
     filters,
 )
 
@@ -17,6 +18,7 @@ from keyboards import main_menu
 from database import (
     get_pending_kyc,
     get_pending_deposits,
+    update_deposit_status,
 )
 
 admin_menu = ReplyKeyboardMarkup(
@@ -169,4 +171,24 @@ pending_kyc_handler = MessageHandler(
 pending_deposits_handler = MessageHandler(
     filters.Regex("^📥 Pending Deposits$"),
     pending_deposits,
+        )
+
+async def deposit_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+
+    action, deposit_id = query.data.split(":")
+    deposit_id = int(deposit_id)
+
+    if action == "approve_deposit":
+        update_deposit_status(deposit_id, "Approved")
+        await query.edit_message_text("✅ Deposit approved.")
+
+    elif action == "reject_deposit":
+        update_deposit_status(deposit_id, "Rejected")
+        await query.edit_message_text("❌ Deposit rejected.")
+
+deposit_callback_handler = CallbackQueryHandler(
+    deposit_callback,
+    pattern="^(approve_deposit|reject_deposit):",
         )
