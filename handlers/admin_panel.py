@@ -101,13 +101,13 @@ async def pending_kyc(
                 "📄 Identity Document"
             ),
             reply_markup=keyboard,
-        )
+)
 
-                await context.bot.send_photo(
+                 await context.bot.send_photo(
             chat_id=update.effective_chat.id,
             photo=selfie,
             caption="🤳 Selfie Holding Identity Document",
-        )
+)
 
 
 admin_panel_handler = MessageHandler(
