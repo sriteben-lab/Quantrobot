@@ -380,6 +380,51 @@ def get_user_deposits(user_id):
 
     return deposits
 
+def get_pending_deposits():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            id,
+            user_id,
+            network,
+            amount,
+            crypto_amount,
+            txid
+        FROM deposits
+        WHERE status='Pending'
+        ORDER BY id ASC
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows
+
+
+def update_deposit_status(deposit_id, status):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE deposits
+        SET status=?
+        WHERE id=?
+        """,
+        (
+            status,
+            deposit_id,
+        ),
+    )
+
+    conn.commit()
+    conn.close()
+
 def get_latest_deposit_status(user_id):
 
     conn = get_connection()
