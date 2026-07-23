@@ -153,8 +153,7 @@ async def pending_deposits(
                 ),
             ]]
         )
-        
-try:
+       
     await update.message.reply_text(
         f"📥 *Pending Deposit*\n\n"
         f"👤 User ID: `{user_id}`\n"
