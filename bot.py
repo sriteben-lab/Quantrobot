@@ -24,7 +24,6 @@ from handlers.help import help_handler
 from handlers.referrals import referral_handler
 from handlers.refund import refund_handler
 from handlers.check_status import check_status_handler
-from handlers.admin_panel import admin_panel_handler
 
 from handlers.kyc import (
     kyc_handler,
