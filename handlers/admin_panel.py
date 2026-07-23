@@ -121,7 +121,9 @@ async def pending_deposits(
         return
 
     deposits = get_pending_deposits()
-
+    
+    print("PENDING DEPOSITS:", deposits)
+    
     if not deposits:
 
         await update.message.reply_text(
