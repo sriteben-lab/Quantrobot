@@ -84,6 +84,17 @@ def create_tables():
     """)
 
     # =====================================
+    # SUPPORT 
+    # =====================================
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS support_messages(
+        message_id INTEGER PRIMARY KEY,
+        user_id INTEGER
+    )
+    """)
+    
+    # =====================================
     # KYC TABLE
     # =====================================
 
@@ -615,6 +626,52 @@ def get_user_refunds(user_id):
     conn.close()
 
     return rows
+
+# =====================================
+# SUPPORT MESSAGE MAPPING
+# =====================================
+
+def save_support_message(message_id, user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT OR REPLACE INTO support_messages(
+            message_id,
+            user_id
+        )
+        VALUES(?,?)
+    """, (
+        message_id,
+        user_id,
+    ))
+
+    conn.commit()
+    conn.close()
+
+
+def get_support_user(message_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT user_id
+        FROM support_messages
+        WHERE message_id=?
+    """, (
+        message_id,
+    ))
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    if row:
+        return row[0]
+
+    return None
 
 # =====================================
 # KYC FUNCTIONS
