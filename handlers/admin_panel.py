@@ -225,6 +225,11 @@ pending_refunds_handler = MessageHandler(
     pending_refunds,
 )
 
+async def support_inbox(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "📩 Support Inbox"
+    )
+
 async def deposit_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -324,4 +329,9 @@ async def refund_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 refund_callback_handler = CallbackQueryHandler(
     refund_callback,
     pattern="^(approve_refund|reject_refund):",
+)
+
+support_inbox_handler = MessageHandler(
+    filters.Regex("^💬 Support Inbox$"),
+    support_inbox,
 )
