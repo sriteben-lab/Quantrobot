@@ -119,8 +119,11 @@ reject_kyc_handler = CommandHandler(
 
 async def kyc_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
+    print("CALLBACK RECEIVED")
+
     query = update.callback_query
     await query.answer()
+
     print(query.data)
 
     if update.effective_user.id != ADMIN_ID:
