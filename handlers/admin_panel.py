@@ -167,10 +167,6 @@ try:
     )
 except Exception as e:
     print("DEPOSIT ERROR:", e)
-except Exception as e:
-    print("DEPOSIT ERROR:", e)
-except Exception as e:
-    print("DEPOSIT ERROR:", e)
 
 admin_panel_handler = MessageHandler(
     filters.Regex("^🛠 Admin Panel$"),
