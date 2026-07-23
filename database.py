@@ -375,6 +375,50 @@ def get_user_deposits(user_id):
 
     return deposits
 
+def get_latest_deposit_status(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT status
+        FROM deposits
+        WHERE user_id=?
+        ORDER BY id DESC
+        LIMIT 1
+        """,
+        (user_id,),
+    )
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    return row[0] if row else "No Deposit"
+
+def get_latest_refund_status(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT status
+        FROM refunds
+        WHERE user_id=?
+        ORDER BY id DESC
+        LIMIT 1
+        """,
+        (user_id,),
+    )
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    return row[0] if row else "No Refund Request"
+
 # =====================================
 # REFUND FUNCTIONS
 # =====================================
