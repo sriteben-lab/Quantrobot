@@ -41,6 +41,7 @@ from handlers.admin_panel import (
     pending_kyc_handler,
     pending_deposits_handler,
     pending_refunds_handler,
+    support_inbox_handler,
     deposit_callback_handler,
     refund_callback_handler,
 )
@@ -130,6 +131,7 @@ def main():
     app.add_handler(deposit_callback_handler)
     app.add_handler(pending_refunds_handler)
     app.add_handler(refund_callback_handler)
+    app.add_handler(support_inbox_handler)
 
     menu_filter = filters.Regex(
         r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📊 Check Status|💬 Chat with Support|ℹ️ Help|🏠 Main Menu|🛠 Admin Panel)$"
