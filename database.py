@@ -614,6 +614,30 @@ def get_kyc_status(user_id):
 
     return "Not Submitted"
 
+def get_pending_kyc():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            user_id,
+            full_name,
+            id_document,
+            selfie_document
+        FROM kyc
+        WHERE status='Pending'
+        ORDER BY id ASC
+        """
+    )
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows
+
 def update_kyc_status(user_id, status):
 
     conn = get_connection()
