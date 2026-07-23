@@ -583,6 +583,22 @@ def update_refund_status(refund_id, status):
     conn.commit()
     conn.close()
 
+def get_refund(refund_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT user_id, investment_amount
+        FROM refunds
+        WHERE id=?
+    """, (refund_id,))
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    return row
 
 def get_user_refunds(user_id):
 
