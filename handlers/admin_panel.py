@@ -19,8 +19,10 @@ from database import (
     get_pending_kyc,
     get_pending_deposits,
     update_deposit_status,
+    get_deposit,
+    add_wallet_balance,
 )
-
+    
 admin_menu = ReplyKeyboardMarkup(
     [
         ["📥 Pending Deposits"],
