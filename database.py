@@ -703,6 +703,100 @@ def get_support_user(message_id):
     return None
 
 # =====================================
+# SUPPORT TICKETS
+# =====================================
+
+def get_open_ticket(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id
+        FROM support_tickets
+        WHERE user_id=?
+        AND status!='closed'
+        LIMIT 1
+    """, (
+        user_id,
+    ))
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    if row:
+        return row[0]
+
+    return None
+
+
+def create_support_ticket(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO support_tickets(user_id)
+        VALUES(?)
+    """, (
+        user_id,
+    ))
+
+    ticket_id = cursor.lastrowid
+
+    conn.commit()
+    conn.close()
+
+    return ticket_id
+
+
+def save_ticket_message(
+    ticket_id,
+    sender,
+    sender_id,
+    message=None,
+    media_type=None,
+    file_id=None,
+    caption=None,
+):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO support_ticket_messages(
+            ticket_id,
+            sender,
+            sender_id,
+            message,
+            media_type,
+            file_id,
+            caption
+        )
+        VALUES(?,?,?,?,?,?,?)
+    """, (
+        ticket_id,
+        sender,
+        sender_id,
+        message,
+        media_type,
+        file_id,
+        caption,
+    ))
+
+    cursor.execute("""
+        UPDATE support_tickets
+        SET updated_at=CURRENT_TIMESTAMP
+        WHERE id=?
+    """, (
+        ticket_id,
+    ))
+
+    conn.commit()
+    conn.close()
+
+# =====================================
 # KYC FUNCTIONS
 # =====================================
 
