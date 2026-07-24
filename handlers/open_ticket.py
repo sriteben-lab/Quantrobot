@@ -26,7 +26,9 @@ async def open_ticket(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     ticket_id = int(match.group(1))
-
+    
+    context.user_data["active_ticket"] = ticket_id
+    
     messages = get_ticket_messages(ticket_id)
 
     if not messages:
