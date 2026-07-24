@@ -38,8 +38,14 @@ from handlers.kyc_admin import (
     kyc_callback_handler,
 )
 
+from handlers.support import support
+from handlers.support_inbox import support_inbox
+
 from handlers.admin_panel import (
     admin_panel,
+    pending_kyc,
+    pending_deposits,
+    pending_refunds,
     admin_panel_handler,
     pending_kyc_handler,
     pending_deposits_handler,
@@ -114,6 +120,22 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await admin_panel(update, context)
         return
 
+    elif text == "📥 Pending Deposits":
+        await pending_deposits(update, context)
+        return
+
+    elif text == "🪪 Pending KYC":
+        await pending_kyc(update, context)
+        return
+
+    elif text == "💰 Pending Refunds":
+        await pending_refunds(update, context)
+        return
+
+    elif text == "📩 Support Inbox":
+        await support_inbox(update, context)
+        return
+
     elif text == "ℹ️ Help":
         await help_command(update, context)
         return
@@ -127,7 +149,7 @@ def main():
     app.add_handler(CommandHandler("help", help_command))
 
     menu_filter = filters.Regex(
-        r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📊 Check Status|💬 Chat with Support|📩 Support Inbox|ℹ️ Help|🏠 Main Menu|🛠 Admin Panel)$"
+        r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📊 Check Status|💬 Chat with Support|📩 Support Inbox|📥 Pending Deposits|🪪 Pending KYC|💰 Pending Refunds|🏠 Main Menu|🛠 Admin Panel|ℹ️ Help)$"
     )
 
     app.add_handler(
