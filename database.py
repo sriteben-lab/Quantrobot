@@ -704,6 +704,30 @@ def get_support_user(message_id):
 # SUPPORT TICKETS
 # =====================================
 
+def get_open_ticket(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id
+        FROM support_tickets
+        WHERE user_id=?
+        AND status!='closed'
+        LIMIT 1
+    """, (
+        user_id,
+    ))
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    if row:
+        return row[0]
+
+    return None
+    
 def get_open_support_tickets():
 
     conn = get_connection()
