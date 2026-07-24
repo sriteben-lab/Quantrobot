@@ -218,7 +218,6 @@ def add_user(
     conn.commit()
     conn.close()
 
-
 def get_user(user_id):
 
     conn = get_connection()
