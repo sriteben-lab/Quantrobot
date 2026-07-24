@@ -123,21 +123,21 @@ def create_tables():
     )
     """)
     
-    # =====================================
-    # KYC TABLE
-    # =====================================
+# =====================================
+# KYC TABLE
+# =====================================
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS kyc(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER UNIQUE,
-        full_name TEXT,
-        id_document TEXT,
-        selfie_document TEXT,
-        status TEXT DEFAULT 'Pending',
-        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-    """)
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS kyc(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER UNIQUE,
+    full_name TEXT,
+    id_document TEXT,
+    selfie_document TEXT,
+    status TEXT DEFAULT 'Pending',
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+""")
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS support_tickets(
