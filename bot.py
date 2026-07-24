@@ -72,7 +72,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
-
+    
+    print(f"BUTTON PRESSED: {text}")
+    
     if text == "🏠 Main Menu":
         await update.message.reply_text(
             "🏠 Main Menu",
