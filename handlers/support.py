@@ -9,7 +9,13 @@ from telegram.ext import (
 
 from config import ADMIN_ID
 from keyboards import main_menu
-from database import save_support_message
+
+from database import (
+    save_support_message,
+    get_open_ticket,
+    create_support_ticket,
+    save_ticket_message,
+)
 
 MESSAGE = 0
 
@@ -54,6 +60,19 @@ async def receive_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             user.id,
         )
 
+        ticket_id = get_open_ticket(user.id)
+
+        if not ticket_id:
+            ticket_id = create_support_ticket(user.id)
+
+        save_ticket_message(
+            ticket_id=ticket_id,
+            sender="user",
+            sender_id=user.id,
+            message=update.message.text,
+        )
+        
+
     # ---------- PHOTO ----------
     elif update.message.photo:
 
@@ -75,6 +94,19 @@ async def receive_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             sent.message_id,
             user.id,
         )
+        ticket_id = get_open_ticket(user.id)
+
+        if not ticket_id:
+            ticket_id = create_support_ticket(user.id)
+
+        save_ticket_message(
+            ticket_id=ticket_id,
+            sender="user",
+            sender_id=user.id,
+            media_type="photo",
+            file_id=photo,
+            caption=caption,
+         )
 
     else:
 
