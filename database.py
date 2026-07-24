@@ -851,6 +851,25 @@ def get_ticket_messages(ticket_id):
 
     return rows
 
+def get_ticket(ticket_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM support_tickets
+        WHERE id=?
+    """, (
+        ticket_id,
+    ))
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    return row
+
 # =====================================
 # KYC FUNCTIONS
 # =====================================
