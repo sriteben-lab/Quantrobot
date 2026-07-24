@@ -50,3 +50,8 @@ async def support_inbox(update: Update, context: ContextTypes.DEFAULT_TYPE):
             resize_keyboard=True,
         ),
     )
+
+support_inbox_handler = MessageHandler(
+    filters.Regex("^📩 Support Inbox$"),
+    support_inbox,
+        )
