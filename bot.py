@@ -94,9 +94,12 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     elif text == "💬 Chat with Support":
-        await update.message.reply_text(
-            "💬 Support module is under development."
-        )
+        await support(update, context)
+        return
+
+    elif text == "🛠 Admin Panel":
+        await admin_panel(update, context)
+        return
 
     elif text == "ℹ️ Help":
         await help_command(update, context)
