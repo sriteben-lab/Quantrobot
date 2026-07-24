@@ -23,7 +23,6 @@ from handlers.support_reply import reply_handler
 from handlers.help import help_handler
 from handlers.referrals import referral_handler
 from handlers.refund import refund_handler
-from handlers.check_status import check_status_handler
 from handlers.support_inbox import support_inbox_handler
 from handlers.open_ticket import open_ticket_handler
 from handlers.admin_reply import admin_reply_handler
@@ -49,6 +48,11 @@ from handlers.admin_panel import (
     refund_callback_handler,
 )
 
+from handlers.check_status import (
+    check_status,
+    check_status_handler,
+)
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if context.args:
@@ -72,9 +76,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
-    
+
     print(f"BUTTON PRESSED: {text}")
-    
+
     if text == "🏠 Main Menu":
         await update.message.reply_text(
             "🏠 Main Menu",
@@ -86,14 +90,20 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "📈 Investment module is under development."
         )
+        return
 
     elif text == "👥 Referrals":
         await update.message.reply_text(
             "👥 Referral module is under development."
         )
+        return
 
     elif text == "🪪 KYC Status":
         await kyc_status(update, context)
+        return
+
+    elif text == "📊 Check Status":
+        await check_status(update, context)
         return
 
     elif text == "💬 Chat with Support":
@@ -106,6 +116,7 @@ async def buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     elif text == "ℹ️ Help":
         await help_command(update, context)
+        return
 
 def main():
     create_tables()
