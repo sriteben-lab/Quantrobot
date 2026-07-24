@@ -25,6 +25,7 @@ from handlers.referrals import referral_handler
 from handlers.refund import refund_handler
 from handlers.check_status import check_status_handler
 from handlers.support_inbox import support_inbox_handler
+from handlers.open_ticket import open_ticket_handler
 
 from handlers.kyc import (
     kyc_handler,
@@ -132,6 +133,7 @@ def main():
     app.add_handler(deposit_callback_handler)
     app.add_handler(pending_refunds_handler)
     app.add_handler(refund_callback_handler)
+    app.add_handler(open_ticket_handler)
     
     menu_filter = filters.Regex(
         r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📊 Check Status|💬 Chat with Support|📩 Support Inbox|ℹ️ Help|🏠 Main Menu|🛠 Admin Panel)$"
