@@ -54,4 +54,4 @@ async def support_inbox(update: Update, context: ContextTypes.DEFAULT_TYPE):
 support_inbox_handler = MessageHandler(
     filters.Regex("^📩 Support Inbox$"),
     support_inbox,
-        )
+    )
