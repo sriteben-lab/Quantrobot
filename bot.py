@@ -126,6 +126,16 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
 
+    menu_filter = filters.Regex(
+        r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📊 Check Status|💬 Chat with Support|📩 Support Inbox|ℹ️ Help|🏠 Main Menu|🛠 Admin Panel)$"
+    )
+
+    app.add_handler(
+        MessageHandler(
+            menu_filter,
+            buttons,
+        )
+    )
     
     app.add_handler(registration_handler)
     app.add_handler(profile_handler)
@@ -155,17 +165,6 @@ def main():
     app.add_handler(pending_refunds_handler)
     app.add_handler(refund_callback_handler)
     
-    menu_filter = filters.Regex(
-        r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📊 Check Status|💬 Chat with Support|📩 Support Inbox|ℹ️ Help|🏠 Main Menu|🛠 Admin Panel)$"
-    )
-    
-    app.add_handler(
-        MessageHandler(
-            menu_filter,
-            buttons,
-        )
-    )
-
     print("✅ Quantro Network Bot Started")
 
     app.run_polling()
