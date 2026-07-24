@@ -119,6 +119,7 @@ def main():
     app.add_handler(support_handler)
     app.add_handler(reply_handler)
     app.add_handler(support_inbox_handler)
+    app.add_handler(open_ticket_handler)
     app.add_handler(help_handler)
     app.add_handler(referral_handler)
     app.add_handler(kyc_handler)
@@ -133,7 +134,6 @@ def main():
     app.add_handler(deposit_callback_handler)
     app.add_handler(pending_refunds_handler)
     app.add_handler(refund_callback_handler)
-    app.add_handler(open_ticket_handler)
     
     menu_filter = filters.Regex(
         r"^(📈 Investment Plans|👥 Referrals|🪪 KYC Status|📊 Check Status|💬 Chat with Support|📩 Support Inbox|ℹ️ Help|🏠 Main Menu|🛠 Admin Panel)$"
