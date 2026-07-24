@@ -24,6 +24,7 @@ from handlers.help import help_handler
 from handlers.referrals import referral_handler
 from handlers.refund import refund_handler
 from handlers.check_status import check_status_handler
+from handlers.support_inbox import support_inbox_handler
 
 from handlers.kyc import (
     kyc_handler,
@@ -116,6 +117,7 @@ def main():
     app.add_handler(history_handler)
     app.add_handler(support_handler)
     app.add_handler(reply_handler)
+    app.add_handler(support_inbox_handler)
     app.add_handler(help_handler)
     app.add_handler(referral_handler)
     app.add_handler(kyc_handler)
