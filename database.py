@@ -797,6 +797,61 @@ def save_ticket_message(
     conn.close()
 
 # =====================================
+# ADMIN SUPPORT INBOX
+# =====================================
+
+def get_open_support_tickets():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            id,
+            user_id,
+            status,
+            created_at,
+            updated_at
+        FROM support_tickets
+        WHERE status != 'closed'
+        ORDER BY updated_at DESC
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows
+
+
+def get_ticket_messages(ticket_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            sender,
+            sender_id,
+            message,
+            media_type,
+            file_id,
+            caption,
+            created_at
+        FROM support_ticket_messages
+        WHERE ticket_id=?
+        ORDER BY created_at ASC
+    """, (
+        ticket_id,
+    ))
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows
+
+# =====================================
 # KYC FUNCTIONS
 # =====================================
 
