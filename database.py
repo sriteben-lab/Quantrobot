@@ -804,14 +804,15 @@ def get_open_support_tickets():
 
     cursor.execute("""
         SELECT
-            id,
-            user_id,
-            status,
-            created_at,
-            updated_at
+            support_tickets.id,
+            support_tickets.user_id,
+            users.full_name,
+            support_tickets.updated_at
         FROM support_tickets
-        WHERE status != 'closed'
-        ORDER BY updated_at DESC
+        JOIN users
+            ON users.user_id = support_tickets.user_id
+        WHERE support_tickets.status != 'closed'
+        ORDER BY support_tickets.updated_at DESC
     """)
 
     rows = cursor.fetchall()
