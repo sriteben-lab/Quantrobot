@@ -93,6 +93,35 @@ def create_tables():
         user_id INTEGER
     )
     """)
+
+    # =====================================
+    # SUPPORT TICKETS
+    # =====================================
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS support_tickets(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        status TEXT DEFAULT 'open',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS support_ticket_messages(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ticket_id INTEGER NOT NULL,
+        sender TEXT NOT NULL,
+        sender_id INTEGER NOT NULL,
+        message TEXT,
+        media_type TEXT,
+        file_id TEXT,
+        caption TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(ticket_id) REFERENCES support_tickets(id)
+    )
+    """)
     
     # =====================================
     # KYC TABLE
