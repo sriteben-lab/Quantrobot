@@ -1,4 +1,8 @@
-from telegram import Update
+from telegram import (
+    Update,
+    ReplyKeyboardMarkup,
+)
+
 from telegram.ext import (
     ContextTypes,
     MessageHandler,
@@ -23,31 +27,26 @@ async def support_inbox(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    text = "📩 *Support Inbox*\n\n"
+        keyboard = []
 
     for ticket in tickets:
 
         ticket_id = ticket[0]
         user_id = ticket[1]
-        updated = ticket[4]
+        full_name = ticket[2]
 
-        text += (
-            f"🎫 Ticket #{ticket_id}\n"
-            f"👤 User ID: `{user_id}`\n"
-            f"🕒 {updated}\n\n"
+        keyboard.append(
+            [f"💬 {full_name} ({ticket_id})"]
         )
 
-    text += (
-        "Reply with a ticket number to open it."
-    )
+    keyboard.append(["🛠 Admin Panel"])
 
     await update.message.reply_text(
-        text,
+        "📩 *Support Inbox*\n\n"
+        "Select a conversation.",
         parse_mode="Markdown",
+        reply_markup=ReplyKeyboardMarkup(
+            keyboard,
+            resize_keyboard=True,
+        ),
     )
-
-
-support_inbox_handler = MessageHandler(
-    filters.Regex("^📩 Support Inbox$"),
-    support_inbox,
-)
