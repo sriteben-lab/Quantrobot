@@ -41,6 +41,8 @@ async def support(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def receive_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
+    if update.effective_user.id == ADMIN_ID:
+    return
 
     # ---------- TEXT ----------
     if update.message.text:
