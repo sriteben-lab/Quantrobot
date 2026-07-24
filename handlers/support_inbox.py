@@ -27,10 +27,10 @@ async def support_inbox(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-        keyboard = []
+    # Create keyboard AFTER confirming tickets exist
+    keyboard = []
 
     for ticket in tickets:
-
         ticket_id = ticket[0]
         user_id = ticket[1]
         full_name = ticket[2]
@@ -51,7 +51,8 @@ async def support_inbox(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ),
     )
 
+
 support_inbox_handler = MessageHandler(
-    filters.Regex("^📩 Support Inbox$"),
+    filters.Regex(r"^📩 Support Inbox$"),
     support_inbox,
-    )
+)
