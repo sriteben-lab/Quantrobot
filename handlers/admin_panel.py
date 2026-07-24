@@ -31,6 +31,7 @@ admin_menu = ReplyKeyboardMarkup(
         ["📥 Pending Deposits"],
         ["🪪 Pending KYC"],
         ["💰 Pending Refunds"],
+        ["📩 Support Inbox"],
         ["👥 Users", "📊 Statistics"],
         ["🏠 Main Menu"],
     ],
