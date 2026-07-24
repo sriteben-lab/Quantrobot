@@ -139,9 +139,32 @@ def create_tables():
     )
     """)
 
-    conn.commit()
-    conn.close()
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS support_tickets(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    status TEXT DEFAULT 'open',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+""")
 
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS support_ticket_messages(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ticket_id INTEGER,
+    sender TEXT,
+    sender_id INTEGER,
+    message TEXT,
+    media_type TEXT,
+    file_id TEXT,
+    caption TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+""")
+
+conn.commit()
+conn.close()
 
 # =====================================
 # USER FUNCTIONS
@@ -706,30 +729,30 @@ def get_support_user(message_id):
 # SUPPORT TICKETS
 # =====================================
 
-def get_open_ticket(user_id):
+def get_open_support_tickets():
 
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT id
+        SELECT
+            support_tickets.id,
+            support_tickets.user_id,
+            users.full_name,
+            support_tickets.status,
+            support_tickets.updated_at
         FROM support_tickets
-        WHERE user_id=?
-        AND status!='closed'
-        LIMIT 1
-    """, (
-        user_id,
-    ))
+        JOIN users
+            ON users.user_id = support_tickets.user_id
+        WHERE support_tickets.status != 'closed'
+        ORDER BY support_tickets.updated_at DESC
+    """)
 
-    row = cursor.fetchone()
+    rows = cursor.fetchall()
 
     conn.close()
 
-    if row:
-        return row[0]
-
-    return None
-
+    return rows
 
 def create_support_ticket(user_id):
 
