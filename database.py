@@ -867,6 +867,28 @@ def get_ticket(ticket_id):
     conn.close()
 
     return row
+    
+def get_ticket_user(ticket_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT user_id
+        FROM support_tickets
+        WHERE id=?
+    """, (
+        ticket_id,
+    ))
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    if row:
+        return row[0]
+
+    return None
 
 # =====================================
 # KYC FUNCTIONS
