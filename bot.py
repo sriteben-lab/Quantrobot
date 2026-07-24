@@ -40,6 +40,7 @@ from handlers.kyc_admin import (
 )
 
 from handlers.admin_panel import (
+    admin_panel,
     admin_panel_handler,
     pending_kyc_handler,
     pending_deposits_handler,
