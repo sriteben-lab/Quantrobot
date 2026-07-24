@@ -26,6 +26,7 @@ from handlers.refund import refund_handler
 from handlers.check_status import check_status_handler
 from handlers.support_inbox import support_inbox_handler
 from handlers.open_ticket import open_ticket_handler
+from handlers.admin_reply import admin_reply_handler
 
 from handlers.kyc import (
     kyc_handler,
@@ -120,6 +121,7 @@ def main():
     app.add_handler(reply_handler)
     app.add_handler(support_inbox_handler)
     app.add_handler(open_ticket_handler)
+    app.add_handler(admin_reply_handler)    
     app.add_handler(help_handler)
     app.add_handler(referral_handler)
     app.add_handler(kyc_handler)
