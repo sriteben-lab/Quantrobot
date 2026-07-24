@@ -84,9 +84,9 @@ def create_tables():
     """)
 
     # =====================================
-    # SUPPORT 
+    # SUPPORT MESSAGE MAPPING
     # =====================================
-    
+
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS support_messages(
         message_id INTEGER PRIMARY KEY,
@@ -122,49 +122,25 @@ def create_tables():
         FOREIGN KEY(ticket_id) REFERENCES support_tickets(id)
     )
     """)
-    
-# =====================================
-# KYC TABLE
-# =====================================
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS kyc(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER UNIQUE,
-    full_name TEXT,
-    id_document TEXT,
-    selfie_document TEXT,
-    status TEXT DEFAULT 'Pending',
-    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
-""")
+    # =====================================
+    # KYC TABLE
+    # =====================================
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS support_tickets(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    status TEXT DEFAULT 'open',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
-""")
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS kyc(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER UNIQUE,
+        full_name TEXT,
+        id_document TEXT,
+        selfie_document TEXT,
+        status TEXT DEFAULT 'Pending',
+        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS support_ticket_messages(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    ticket_id INTEGER,
-    sender TEXT,
-    sender_id INTEGER,
-    message TEXT,
-    media_type TEXT,
-    file_id TEXT,
-    caption TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
-""")
-
-conn.commit()
-conn.close()
+    conn.commit()
+    conn.close()
 
 # =====================================
 # USER FUNCTIONS
